@@ -1,0 +1,76 @@
+name: Language library tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.27.x'
+          cache: true
+
+      - name: Verify generated public language facade
+        run: |
+          go run ./tools/gen-public-diagnostic-facts -check -root .
+          go generate ./kustolang
+          status="$(git status --porcelain=v1 --untracked-files=all -- kustolang/language_generated.go kustolang/functions_catalog_generated.go kustolang/commands_catalog_generated.go kustolang/diagnostic_facts_generated.go)"
+          if [ -n "$status" ]; then
+            printf '%s\n' "$status"
+            exit 1
+          fi
+
+      - name: Verify Kusto source provenance
+        run: go run ./cmd/kusto-upstream-check -verify-provenance -local-only
+
+      - name: Vet native implementation
+        run: go vet ./...
+
+      - name: Language-layer isolation smoke
+        run: |
+          cd tools/langsmoke
+          go run .
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+
+      - name: Scan for known vulnerabilities
+        run: |
+          # Let the scanner build with its required Go version; keep the scan and tests on the configured toolchain.
+          GOTOOLCHAIN=auto go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
+
+      - name: Test native implementation
+        run: go test -timeout 20m -coverprofile=coverage.out ./...
+
+      - name: Report coverage summary
+        run: go tool cover -func=coverage.out | tail -1
+
+      - name: Upload coverage profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.out
+
+      - name: Race-test public and internal language packages
+        run: go test -race ./kustolang ./kustolang/engine ./kustolang/environment
+

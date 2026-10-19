@@ -1,0 +1,283 @@
+const EmptyTableTypeName
+const MaxColumnTypeDetailsDepth
+const NonScalarNamedTypePrefix
+func (c *Catalog) CatalogForDatabase(database *github.com/olafhartong/kusto-lang-go/kustolang/engine.DatabaseSymbol) *Catalog
+func (c *Catalog) HasFunction(name string) bool
+func (c *Catalog) LookupEntityGroup(name string) (resolvedName string, members []TableSchema, memberNames []string, ok bool)
+func (c *Catalog) LookupExternalTable(name string) (TableSchema, bool)
+func (c *Catalog) LookupGraphModel(name string) (GraphShapeDetails, bool)
+func (c *Catalog) LookupMaterializedView(name string) (TableSchema, bool)
+func (c *Catalog) LookupStoredQueryResult(name string) (TableSchema, bool)
+func (c *Catalog) LookupTable(name string) (TableSchema, bool)
+func (c *Catalog) ValidateTypes() error
+func (c Column) Clone() Column
+func (d *ColumnTypeDetails) UnmarshalJSON(data []byte) error
+func (d *DatabaseDetails) UnmarshalJSON(data []byte) error
+func (d ColumnTypeDetails) MarshalJSON() ([]byte, error)
+func (e *EnvironmentDefinition) UnmarshalJSON(data []byte) error
+func (g GraphShapeDetails) Clone() GraphShapeDetails
+func (l *LocalData) UnmarshalJSON(data []byte) error
+func (p *PreparedEnvironment) NewCatalog(local LocalData) (*Catalog, error)
+func (t *TableSchema) AppendColumn(name string, column Column)
+func (t *TableSchema) Delete(name string)
+func (t *TableSchema) MarkNonTabularResult()
+func (t *TableSchema) Merge(other TableSchema)
+func (t *TableSchema) Set(name, typ string, origin bool)
+func (t *TableSchema) SetColumn(name string, column Column)
+func (t *TableSchema) SetExactType(name string, typ *github.com/olafhartong/kusto-lang-go/kustolang/engine.TypeSymbol)
+func (t *TableSchema) SetResultTables(tables []ResultTable)
+func (t *TableSchema) SetUnnamed(typ string, origin bool)
+func (t *TableSchema) SetUnnamedColumn(column Column)
+func (t *TableSchema) SetWithDynamicProperties(name, typ string, origin bool, properties DynamicProperties, elementProperties DynamicProperties, elementType ...string)
+func (t *TableSchema) SetWithNestedDynamicProperties(name, typ string, origin bool, properties DynamicProperties, elementProperties DynamicProperties, elementElementProperties DynamicProperties, elementType ...string)
+func (t *TableSchema) SetWithProperties(name, typ string, origin bool, properties DynamicProperties)
+func (t TableSchema) Candidates(name string) []Column
+func (t TableSchema) Clone() TableSchema
+func (t TableSchema) Get(name string) (Column, bool)
+func (t TableSchema) Has(name string) bool
+func (t TableSchema) IsAmbiguous(name string) bool
+func (t TableSchema) PublishedColumnsAndTables() (map[string]string, []ResultTable)
+func (t TableSchema) ResultTables() []ResultTable
+func (t TableSchema) ToMap() map[string]string
+func AddM365WithSentinelIfPresent(envs KQLEnvironments)
+func BuildGlobalState(env *EnvironmentDefinition, local LocalData) *github.com/olafhartong/kusto-lang-go/kustolang/engine.GlobalState
+func LoadEnvironments(path string) (KQLEnvironments, error)
+func NewCatalog(env *EnvironmentDefinition, local LocalData) (*Catalog, error)
+func NewNonTabularOpenSchema() TableSchema
+func NewNonTabularSchema() TableSchema
+func NewOpenTableSchema() TableSchema
+func NewTableSchema() TableSchema
+func PrepareEnvironment(env *EnvironmentDefinition) (*PreparedEnvironment, error)
+type ArgumentDetails struct {
+	Name		string			`json:"name"`
+	Type		string			`json:"type"`
+	TypeDetails	*ColumnTypeDetails	`json:"type_details,omitempty"`
+	Optional	bool			`json:"optional"`
+	MissingType	bool			`json:"-"`
+}
+type Catalog struct {
+	Tables			map[string]TableSchema
+	TableNames		map[string]string
+	ImpliedTables		[]TableSchema
+	ExternalTables		map[string]TableSchema
+	ExternalTableNames	map[string]string
+	MaterializedViews	map[string]TableSchema
+	MaterializedNames	map[string]string
+	StoredQueryResults	map[string]TableSchema
+	StoredResultNames	map[string]string
+	GraphModels		map[string]GraphShapeDetails
+	GraphModelNames		map[string]string
+	EntityGroups		map[string][]TableSchema
+	EntityGroupMembers	map[string][]string
+	EntityGroupNames	map[string]string
+
+	ScalarFunctions		map[string]ScalarFunctionDetails
+	TabularFunctions	map[string]TabularFunctionDetails
+	MagicFunctions		map[string]bool
+	Watchlists		map[string]WatchlistDetails
+	Globals			*github.com/olafhartong/kusto-lang-go/kustolang/engine.GlobalState
+	Binder			*github.com/olafhartong/kusto-lang-go/kustolang/engine.Binder
+	DatabaseCatalogs	map[*github.com/olafhartong/kusto-lang-go/kustolang/engine.DatabaseSymbol]*Catalog
+}
+type ClusterDetails struct {
+	Databases map[string]DatabaseDetails `json:"databases"`
+}
+type Column struct {
+	Type				string
+	ExactType			*github.com/olafhartong/kusto-lang-go/kustolang/engine.TypeSymbol
+	DynamicSelectorShape		string
+	NonScalar			bool
+	Origin				bool
+	ReferenceID			string
+	ElementType			string
+	ElementElementType		string
+	Properties			DynamicProperties
+	ElementProperties		DynamicProperties
+	ElementElementProperties	DynamicProperties
+}
+type ColumnTypeDetails struct {
+	Type		string				`json:"type"`
+	Properties	map[string]ColumnTypeDetails	`json:"properties,omitempty"`
+	PropertyOrder	[]string			`json:"-"`
+	Element		*ColumnTypeDetails		`json:"element,omitempty"`
+}
+type DatabaseDetails struct {
+	AlternateName			string					`json:"alternate_name,omitempty"`
+	TableDetails			map[string]TableDetails			`json:"tables"`
+	TableOptions			map[string]TableOptions			`json:"table_options,omitempty"`
+	ExternalTables			map[string]TableDetails			`json:"external_tables"`
+	ExternalTableOptions		map[string]TableOptions			`json:"external_table_options,omitempty"`
+	MaterializedViews		map[string]TableDetails			`json:"materialized_views"`
+	MaterializedViewOptions		map[string]TableOptions			`json:"materialized_view_options,omitempty"`
+	MaterializedViewQueries		map[string]string			`json:"materialized_view_queries,omitempty"`
+	StoredQueryResults		map[string]TableDetails			`json:"stored_query_results"`
+	StoredQueryResultOptions	map[string]TableOptions			`json:"stored_query_result_options,omitempty"`
+	GraphModels			map[string]GraphDetails			`json:"graph_models"`
+	EntityGroups			map[string][]string			`json:"entity_groups"`
+	MagicFunctions			[]string				`json:"magic_functions"`
+	TabularFunctions		map[string]TabularFunctionDetails	`json:"tabular_functions,omitempty"`
+	ScalarFunctions			map[string]ScalarFunctionDetails	`json:"scalar_functions,omitempty"`
+	TableOrder			[]string				`json:"-"`
+	TableColumnOrder		map[string][]string			`json:"-"`
+	ExternalTableOrder		[]string				`json:"-"`
+	ExternalTableColumnOrder	map[string][]string			`json:"-"`
+	MaterializedViewOrder		[]string				`json:"-"`
+	MaterializedViewColumnOrder	map[string][]string			`json:"-"`
+	StoredQueryResultOrder		[]string				`json:"-"`
+	StoredQueryResultColumnOrder	map[string][]string			`json:"-"`
+}
+type DynamicProperties map[string]DynamicProperty
+type DynamicProperty struct {
+	Type			string
+	ElementType		string
+	Properties		DynamicProperties
+	ElementProperties	DynamicProperties
+}
+type EnvironmentDefinition struct {
+	FunctionCatalogs		[]string				`json:"function_catalogs"`
+	TableDetails			map[string]TableDetails			`json:"tables"`
+	TableOptions			map[string]TableOptions			`json:"table_options,omitempty"`
+	ExternalTables			map[string]TableDetails			`json:"external_tables"`
+	ExternalTableOptions		map[string]TableOptions			`json:"external_table_options,omitempty"`
+	MaterializedViews		map[string]TableDetails			`json:"materialized_views"`
+	MaterializedViewOptions		map[string]TableOptions			`json:"materialized_view_options,omitempty"`
+	MaterializedViewQueries		map[string]string			`json:"materialized_view_queries,omitempty"`
+	StoredQueryResults		map[string]TableDetails			`json:"stored_query_results"`
+	StoredQueryResultOptions	map[string]TableOptions			`json:"stored_query_result_options,omitempty"`
+	GraphModels			map[string]GraphDetails			`json:"graph_models"`
+	EntityGroups			map[string][]string			`json:"entity_groups"`
+	MagicFunctions			[]string				`json:"magic_functions"`
+	TabularFunctions		map[string]TabularFunctionDetails	`json:"tabular_functions,omitempty"`
+	ScalarFunctions			map[string]ScalarFunctionDetails	`json:"scalar_functions,omitempty"`
+	Domain				string					`json:"domain,omitempty"`
+	CurrentCluster			string					`json:"current_cluster,omitempty"`
+	CurrentDatabase			string					`json:"current_database,omitempty"`
+	Clusters			map[string]ClusterDetails		`json:"clusters,omitempty"`
+	TableOrder			[]string				`json:"-"`
+	TableColumnOrder		map[string][]string			`json:"-"`
+	ExternalTableOrder		[]string				`json:"-"`
+	ExternalTableColumnOrder	map[string][]string			`json:"-"`
+	MaterializedViewOrder		[]string				`json:"-"`
+	MaterializedViewColumnOrder	map[string][]string			`json:"-"`
+	StoredQueryResultOrder		[]string				`json:"-"`
+	StoredQueryResultColumnOrder	map[string][]string			`json:"-"`
+}
+type GraphDetails struct {
+	Edges		map[string]TableDetails	`json:"edges"`
+	Nodes		map[string]TableDetails	`json:"nodes"`
+	Snapshots	[]string		`json:"snapshots"`
+}
+type GraphShapeDetails struct {
+	Edges		TableSchema
+	Nodes		TableSchema
+	Snapshots	map[string]string
+	ModelNames	[]string
+}
+type KQLEnvironments map[string]*EnvironmentDefinition
+type LocalData struct {
+	Watchlists			map[string]WatchlistDetails		`json:"watchlists"`
+	Tables				map[string]TableDetails			`json:"tables"`
+	TableOptions			map[string]TableOptions			`json:"table_options,omitempty"`
+	ExternalTables			map[string]TableDetails			`json:"external_tables"`
+	ExternalTableOptions		map[string]TableOptions			`json:"external_table_options,omitempty"`
+	MaterializedViews		map[string]TableDetails			`json:"materialized_views"`
+	MaterializedViewOptions		map[string]TableOptions			`json:"materialized_view_options,omitempty"`
+	MaterializedViewQueries		map[string]string			`json:"materialized_view_queries,omitempty"`
+	StoredQueryResults		map[string]TableDetails			`json:"stored_query_results"`
+	StoredQueryResultOptions	map[string]TableOptions			`json:"stored_query_result_options,omitempty"`
+	GraphModels			map[string]GraphDetails			`json:"graph_models"`
+	TabularFunctions		map[string]TabularFunctionDetails	`json:"tabular_functions"`
+	ScalarFunctions			map[string]ScalarFunctionDetails	`json:"scalar_functions"`
+	TableOrder			[]string				`json:"-"`
+	TableColumnOrder		map[string][]string			`json:"-"`
+	ExternalTableOrder		[]string				`json:"-"`
+	ExternalTableColumnOrder	map[string][]string			`json:"-"`
+	MaterializedViewOrder		[]string				`json:"-"`
+	MaterializedViewColumnOrder	map[string][]string			`json:"-"`
+	StoredQueryResultOrder		[]string				`json:"-"`
+	StoredQueryResultColumnOrder	map[string][]string			`json:"-"`
+}
+type OrderedJSONField = orderedJSONField
+type PreparedEnvironment struct {
+	catalog *Catalog
+}
+type ResultColumn struct {
+	Name	string	`json:"name"`
+	Type	string	`json:"type"`
+}
+type ResultTable struct {
+	Name	string		`json:"name"`
+	Columns	[]ResultColumn	`json:"columns"`
+	IsOpen	bool		`json:"is_open"`
+}
+type ScalarFunctionDetails struct {
+	OutputType		string			`json:"output_type"`
+	OutputTypeDetails	*ColumnTypeDetails	`json:"output_type_details,omitempty"`
+	Arguments		[]ArgumentDetails	`json:"arguments"`
+}
+type TableDetails map[string]string
+type TableOptions struct {
+	IsOpen		bool				`json:"is_open,omitempty"`
+	IsSerialized	bool				`json:"is_serialized,omitempty"`
+	IsSorted	bool				`json:"is_sorted,omitempty"`
+	ColumnTypes	map[string]ColumnTypeDetails	`json:"column_types,omitempty"`
+}
+type TableSchema struct {
+	Columns			map[string]Column
+	ColumnCandidates	map[string][]Column
+	Order			[]string
+	Open			bool
+	Serialized		bool
+	Sorted			bool
+	MissingColumnType	string
+	TerminalTables		[]ResultTable
+	resultKind		terminalResultKind
+}
+type TabularFunctionDetails struct {
+	IsOpen			bool				`json:"is_open,omitempty"`
+	OutputColumns		TableDetails			`json:"output_columns"`
+	OutputColumnTypes	map[string]ColumnTypeDetails	`json:"output_column_types,omitempty"`
+	Arguments		[]ArgumentDetails		`json:"arguments"`
+}
+type WatchlistDetails map[string]string
+var AllowDefenderTimeAliases
+var ApplyColumnTypeDetailsToSchema
+var CleanIdentifier
+var CloneColumnProperties
+var CloneColumnTypeDetails
+var CloneColumnTypeDetailsMap
+var CloneEnvironmentDefinition
+var CloneLocalData
+var CloneResultTables
+var CloneStringMap
+var ColumnFromTypeSymbol
+var ColumnMetadataConsensus
+var CopyTableOptionsMap
+var CurrentEnvironmentDefinition
+var DecodeOrderedJSONObject
+var DynamicBagPropertiesFromSymbol
+var DynamicPropertiesFromTypeSymbol
+var DynamicScalarElementTypeFromTypeSymbol
+var FoldName
+var IntSuffix
+var IsIdentifierLike
+var MatchingDatabaseSymbol
+var NewOwnedCatalog
+var NormalizeColumnTypeDetails
+var NormalizeColumnTypeDetailsMap
+var NormalizeType
+var ParametersFromArguments
+var PublicTypeName
+var ResultTableFromSchema
+var ResultTableFromTableSymbol
+var ScalarFunctionPublicType
+var ScalarFunctionTypeSymbol
+var ScalarType
+var SchemaFromTableDetails
+var TableIsOpen
+var TableSchemaFromSymbol
+var TabularFunctionSchema
+var TabularFunctionSymbolFromDetails
+var TypeNameForSchemaCopy
+var TypeSymbolFromColumnTypeDetails
+var UniqueColumnName

@@ -1,0 +1,26 @@
+version: "2"
+
+run:
+  timeout: 10m
+
+linters:
+  # Standard set: errcheck, govet, ineffassign, staticcheck, unused.
+  default: standard
+  settings:
+    errcheck:
+      # Writes to stdout/stderr have no actionable error path.
+      exclude-functions:
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+  exclusions:
+    generated: lax
+    paths:
+      # Faithful source port of the upstream C# library; kept upstream-shaped.
+      - kustolang
+      - kustolang/engine
+      - third_party
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

@@ -1,0 +1,983 @@
+{
+  "commit": "6b5c2f739a14bd5de52115f9bf9695985f0852dd",
+  "policies": [
+    {
+      "query": ".show table T policy changedatacapture",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".show table db.T policy changedatacapture",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".show table * policy changedatacapture",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected one of: caching, extent_tags_retention, ingestionbatching, ingestiontime, merge, mirroring, partitioning, restricted_view_access, retention, row_level_security, roworder, sharding, update",
+          "start": 21,
+          "length": 17
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter table T policy changedatacapture (All)",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".alter table ['policy'] policy changedatacapture (All, ['Other'])",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".alter tables (T, U) policy changedatacapture (All, Other)",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".delete table T policy changedatacapture",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".show cluster policy materialized-view-prioritization",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EffectivePolicy",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".alter cluster policy materialized-view-prioritization '{\"Enabled\":true}' ",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".alter-merge cluster policy materialized-view-prioritization '{}' ",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".drop cluster policy materialized-view-prioritization",
+      "diagnostics": [],
+      "columns": [
+        {
+          "Name": "ChildEntities",
+          "type": "string"
+        },
+        {
+          "Name": "EntityName",
+          "type": "string"
+        },
+        {
+          "Name": "EntityType",
+          "type": "string"
+        },
+        {
+          "Name": "Policy",
+          "type": "string"
+        },
+        {
+          "Name": "PolicyName",
+          "type": "string"
+        }
+      ],
+      "isOpen": false,
+      "resultType": ""
+    },
+    {
+      "query": ".alter table T policy changedatacapture",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: '('",
+          "start": 39,
+          "length": 0
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter table T policy changedatacapture ()",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: <name>",
+          "start": 41,
+          "length": 1
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter tables () policy changedatacapture (All)",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: <table>",
+          "start": 15,
+          "length": 1
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter tables (T, U) policy changedatacapture ()",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: <name>",
+          "start": 47,
+          "length": 1
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter table T policy changedatacapture (1)",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: <name>",
+          "start": 41,
+          "length": 1
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter table T policy changedatacapture (All Other)",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: ')'",
+          "start": 45,
+          "length": 5
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter cluster policy materialized-view-prioritization",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: <string-literal>",
+          "start": 54,
+          "length": 0
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".alter-merge cluster policy materialized-view-prioritization 1",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected: <string-literal>",
+          "start": 61,
+          "length": 1
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    },
+    {
+      "query": ".delete cluster policy materialized-view-prioritization",
+      "diagnostics": [
+        {
+          "Code": "KS005",
+          "Message": "Expected one of: caching, callout, managed_identity, request_classification, rowstore, sandbox, sharding, streamingingestion",
+          "start": 23,
+          "length": 12
+        }
+      ],
+      "columns": null,
+      "isOpen": null,
+      "resultType": null
+    }
+  ],
+  "completions": [
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, 'yes', 'no') | where Computed == ",
+      "examples": [
+        {
+          "display": "no",
+          "edit": "'no'"
+        },
+        {
+          "display": "yes",
+          "edit": "'yes'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = case(Name == 'condition-only', 'yes', Flag, 'maybe', 'no') | where Computed == ",
+      "examples": [
+        {
+          "display": "maybe",
+          "edit": "'maybe'"
+        },
+        {
+          "display": "no",
+          "edit": "'no'"
+        },
+        {
+          "display": "yes",
+          "edit": "'yes'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = coalesce(Name, iff(Flag, 'yes', 'no'), 'fallback') | where Computed == ",
+      "examples": [
+        {
+          "display": "fallback",
+          "edit": "'fallback'"
+        },
+        {
+          "display": "no",
+          "edit": "'no'"
+        },
+        {
+          "display": "yes",
+          "edit": "'yes'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, int(1), long(2)) | where Computed == ",
+      "examples": [
+        {
+          "display": "1",
+          "edit": "int(1)"
+        },
+        {
+          "display": "2",
+          "edit": "long(2)"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, h'private', 'public') | where Computed == ",
+      "examples": [
+        {
+          "display": "private",
+          "edit": "h'private'"
+        },
+        {
+          "display": "public",
+          "edit": "'public'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, 'a' h'b', 'c' 'd') | where Computed == ",
+      "examples": [
+        {
+          "display": "ab",
+          "edit": "h'ab'"
+        },
+        {
+          "display": "cd",
+          "edit": "'cd'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, dynamic([1,2]), dynamic({\"x\":1})) | where Computed == ",
+      "examples": [
+        {
+          "display": "[1,2]",
+          "edit": "dynamic([1,2])"
+        },
+        {
+          "display": "{\"x\":1}",
+          "edit": "dynamic({\"x\":1})"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = 'constant-only' | where Computed == ",
+      "examples": []
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = strcat('not-a-value-argument', 'other') | where Computed == ",
+      "examples": []
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'short') | where Computed == ",
+      "examples": [
+        {
+          "display": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "edit": "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'"
+        },
+        {
+          "display": "short",
+          "edit": "'short'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'short') | where Computed == ",
+      "examples": [
+        {
+          "display": "short",
+          "edit": "'short'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, '😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀', 'short') | where Computed == ",
+      "examples": [
+        {
+          "display": "short",
+          "edit": "'short'"
+        },
+        {
+          "display": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+          "edit": "'😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = iff(Flag, '😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀', 'short') | where Computed == ",
+      "examples": [
+        {
+          "display": "short",
+          "edit": "'short'"
+        }
+      ]
+    },
+    {
+      "query": "datatable(Name:string, Flag:bool)[] | extend Computed = case(Flag, 'choice0', Flag, 'choice1', Flag, 'choice2', Flag, 'choice3', Flag, 'choice4', Flag, 'choice5', Flag, 'choice6', Flag, 'choice7', Flag, 'choice8', Flag, 'choice9', Flag, 'choice10', Flag, 'choice11', Flag, 'choice12', Flag, 'choice13', Flag, 'choice14', Flag, 'choice15', Flag, 'choice16', Flag, 'choice17', Flag, 'choice18', Flag, 'choice19', Flag, 'choice20', Flag, 'choice21', Flag, 'choice22', Flag, 'choice23', Flag, 'choice24', Flag, 'choice25', Flag, 'choice26', Flag, 'choice27', Flag, 'choice28', Flag, 'choice29', Flag, 'choice30', Flag, 'choice31', Flag, 'choice32', Flag, 'choice33', Flag, 'choice34', Flag, 'choice35', Flag, 'choice36', Flag, 'choice37', Flag, 'choice38', Flag, 'choice39', Flag, 'choice40', Flag, 'choice41', Flag, 'choice42', Flag, 'choice43', Flag, 'choice44', Flag, 'choice45', Flag, 'choice46', Flag, 'choice47', Flag, 'choice48', Flag, 'choice49', Flag, 'choice50', Flag, 'choice51', Flag, 'choice52', Flag, 'choice53', Flag, 'choice54', Flag, 'choice55', Flag, 'choice56', Flag, 'choice57', Flag, 'choice58', Flag, 'choice59', Flag, 'choice60', Flag, 'choice61', Flag, 'choice62', Flag, 'choice63', Flag, 'choice64', Flag, 'choice65', Flag, 'choice66', Flag, 'choice67', Flag, 'choice68', Flag, 'choice69', Flag, 'choice70', Flag, 'choice71', Flag, 'choice72', Flag, 'choice73', Flag, 'choice74', Flag, 'choice75', Flag, 'choice76', Flag, 'choice77', Flag, 'choice78', Flag, 'choice79', Flag, 'choice80', Flag, 'choice81', Flag, 'choice82', Flag, 'choice83', Flag, 'choice84', Flag, 'choice85', Flag, 'choice86', Flag, 'choice87', Flag, 'choice88', Flag, 'choice89', Flag, 'choice90', Flag, 'choice91', Flag, 'choice92', Flag, 'choice93', Flag, 'choice94', Flag, 'choice95', Flag, 'choice96', Flag, 'choice97', Flag, 'choice98', Flag, 'choice99', Flag, 'choice100', Flag, 'choice101', Flag, 'choice102', Flag, 'choice103', Flag, 'choice104', Flag, 'choice105', Flag, 'choice106', Flag, 'choice107', Flag, 'choice108', Flag, 'choice109', 'final') | where Computed == ",
+      "examples": [
+        {
+          "display": "choice0",
+          "edit": "'choice0'"
+        },
+        {
+          "display": "choice1",
+          "edit": "'choice1'"
+        },
+        {
+          "display": "choice10",
+          "edit": "'choice10'"
+        },
+        {
+          "display": "choice11",
+          "edit": "'choice11'"
+        },
+        {
+          "display": "choice12",
+          "edit": "'choice12'"
+        },
+        {
+          "display": "choice13",
+          "edit": "'choice13'"
+        },
+        {
+          "display": "choice14",
+          "edit": "'choice14'"
+        },
+        {
+          "display": "choice15",
+          "edit": "'choice15'"
+        },
+        {
+          "display": "choice16",
+          "edit": "'choice16'"
+        },
+        {
+          "display": "choice17",
+          "edit": "'choice17'"
+        },
+        {
+          "display": "choice18",
+          "edit": "'choice18'"
+        },
+        {
+          "display": "choice19",
+          "edit": "'choice19'"
+        },
+        {
+          "display": "choice2",
+          "edit": "'choice2'"
+        },
+        {
+          "display": "choice20",
+          "edit": "'choice20'"
+        },
+        {
+          "display": "choice21",
+          "edit": "'choice21'"
+        },
+        {
+          "display": "choice22",
+          "edit": "'choice22'"
+        },
+        {
+          "display": "choice23",
+          "edit": "'choice23'"
+        },
+        {
+          "display": "choice24",
+          "edit": "'choice24'"
+        },
+        {
+          "display": "choice25",
+          "edit": "'choice25'"
+        },
+        {
+          "display": "choice26",
+          "edit": "'choice26'"
+        },
+        {
+          "display": "choice27",
+          "edit": "'choice27'"
+        },
+        {
+          "display": "choice28",
+          "edit": "'choice28'"
+        },
+        {
+          "display": "choice29",
+          "edit": "'choice29'"
+        },
+        {
+          "display": "choice3",
+          "edit": "'choice3'"
+        },
+        {
+          "display": "choice30",
+          "edit": "'choice30'"
+        },
+        {
+          "display": "choice31",
+          "edit": "'choice31'"
+        },
+        {
+          "display": "choice32",
+          "edit": "'choice32'"
+        },
+        {
+          "display": "choice33",
+          "edit": "'choice33'"
+        },
+        {
+          "display": "choice34",
+          "edit": "'choice34'"
+        },
+        {
+          "display": "choice35",
+          "edit": "'choice35'"
+        },
+        {
+          "display": "choice36",
+          "edit": "'choice36'"
+        },
+        {
+          "display": "choice37",
+          "edit": "'choice37'"
+        },
+        {
+          "display": "choice38",
+          "edit": "'choice38'"
+        },
+        {
+          "display": "choice39",
+          "edit": "'choice39'"
+        },
+        {
+          "display": "choice4",
+          "edit": "'choice4'"
+        },
+        {
+          "display": "choice40",
+          "edit": "'choice40'"
+        },
+        {
+          "display": "choice41",
+          "edit": "'choice41'"
+        },
+        {
+          "display": "choice42",
+          "edit": "'choice42'"
+        },
+        {
+          "display": "choice43",
+          "edit": "'choice43'"
+        },
+        {
+          "display": "choice44",
+          "edit": "'choice44'"
+        },
+        {
+          "display": "choice45",
+          "edit": "'choice45'"
+        },
+        {
+          "display": "choice46",
+          "edit": "'choice46'"
+        },
+        {
+          "display": "choice47",
+          "edit": "'choice47'"
+        },
+        {
+          "display": "choice48",
+          "edit": "'choice48'"
+        },
+        {
+          "display": "choice49",
+          "edit": "'choice49'"
+        },
+        {
+          "display": "choice5",
+          "edit": "'choice5'"
+        },
+        {
+          "display": "choice50",
+          "edit": "'choice50'"
+        },
+        {
+          "display": "choice51",
+          "edit": "'choice51'"
+        },
+        {
+          "display": "choice52",
+          "edit": "'choice52'"
+        },
+        {
+          "display": "choice53",
+          "edit": "'choice53'"
+        },
+        {
+          "display": "choice54",
+          "edit": "'choice54'"
+        },
+        {
+          "display": "choice55",
+          "edit": "'choice55'"
+        },
+        {
+          "display": "choice56",
+          "edit": "'choice56'"
+        },
+        {
+          "display": "choice57",
+          "edit": "'choice57'"
+        },
+        {
+          "display": "choice58",
+          "edit": "'choice58'"
+        },
+        {
+          "display": "choice59",
+          "edit": "'choice59'"
+        },
+        {
+          "display": "choice6",
+          "edit": "'choice6'"
+        },
+        {
+          "display": "choice60",
+          "edit": "'choice60'"
+        },
+        {
+          "display": "choice61",
+          "edit": "'choice61'"
+        },
+        {
+          "display": "choice62",
+          "edit": "'choice62'"
+        },
+        {
+          "display": "choice63",
+          "edit": "'choice63'"
+        },
+        {
+          "display": "choice64",
+          "edit": "'choice64'"
+        },
+        {
+          "display": "choice65",
+          "edit": "'choice65'"
+        },
+        {
+          "display": "choice66",
+          "edit": "'choice66'"
+        },
+        {
+          "display": "choice67",
+          "edit": "'choice67'"
+        },
+        {
+          "display": "choice68",
+          "edit": "'choice68'"
+        },
+        {
+          "display": "choice69",
+          "edit": "'choice69'"
+        },
+        {
+          "display": "choice7",
+          "edit": "'choice7'"
+        },
+        {
+          "display": "choice70",
+          "edit": "'choice70'"
+        },
+        {
+          "display": "choice71",
+          "edit": "'choice71'"
+        },
+        {
+          "display": "choice72",
+          "edit": "'choice72'"
+        },
+        {
+          "display": "choice73",
+          "edit": "'choice73'"
+        },
+        {
+          "display": "choice74",
+          "edit": "'choice74'"
+        },
+        {
+          "display": "choice75",
+          "edit": "'choice75'"
+        },
+        {
+          "display": "choice76",
+          "edit": "'choice76'"
+        },
+        {
+          "display": "choice77",
+          "edit": "'choice77'"
+        },
+        {
+          "display": "choice78",
+          "edit": "'choice78'"
+        },
+        {
+          "display": "choice79",
+          "edit": "'choice79'"
+        },
+        {
+          "display": "choice8",
+          "edit": "'choice8'"
+        },
+        {
+          "display": "choice80",
+          "edit": "'choice80'"
+        },
+        {
+          "display": "choice81",
+          "edit": "'choice81'"
+        },
+        {
+          "display": "choice82",
+          "edit": "'choice82'"
+        },
+        {
+          "display": "choice83",
+          "edit": "'choice83'"
+        },
+        {
+          "display": "choice84",
+          "edit": "'choice84'"
+        },
+        {
+          "display": "choice85",
+          "edit": "'choice85'"
+        },
+        {
+          "display": "choice86",
+          "edit": "'choice86'"
+        },
+        {
+          "display": "choice87",
+          "edit": "'choice87'"
+        },
+        {
+          "display": "choice88",
+          "edit": "'choice88'"
+        },
+        {
+          "display": "choice89",
+          "edit": "'choice89'"
+        },
+        {
+          "display": "choice9",
+          "edit": "'choice9'"
+        },
+        {
+          "display": "choice90",
+          "edit": "'choice90'"
+        },
+        {
+          "display": "choice91",
+          "edit": "'choice91'"
+        },
+        {
+          "display": "choice92",
+          "edit": "'choice92'"
+        },
+        {
+          "display": "choice93",
+          "edit": "'choice93'"
+        },
+        {
+          "display": "choice94",
+          "edit": "'choice94'"
+        },
+        {
+          "display": "choice95",
+          "edit": "'choice95'"
+        },
+        {
+          "display": "choice96",
+          "edit": "'choice96'"
+        },
+        {
+          "display": "choice97",
+          "edit": "'choice97'"
+        },
+        {
+          "display": "choice98",
+          "edit": "'choice98'"
+        }
+      ]
+    }
+  ]
+}
