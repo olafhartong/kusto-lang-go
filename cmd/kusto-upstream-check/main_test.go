@@ -472,6 +472,14 @@ func TestVerifyLocalProvenanceRejectsMalformedParityAttestations(t *testing.T) {
 		{"bad result hash", func(metadata *upstreamMetadata) {
 			metadata.DifferentialParityAttestations[0].OracleResult.SHA256 = "bad"
 		}, "oracle result sha256"},
+		{"supporting artifact hash", func(metadata *upstreamMetadata) {
+			artifact := metadata.DifferentialParityAttestations[0].Generator
+			artifact.SHA256 = strings.Repeat("f", 64)
+			metadata.DifferentialParityAttestations[0].SupportingArtifacts = []parityArtifact{artifact}
+		}, "supporting artifact hash mismatch"},
+		{"supporting artifact traversal", func(metadata *upstreamMetadata) {
+			metadata.DifferentialParityAttestations[0].SupportingArtifacts = []parityArtifact{{Path: "../oracle.cs", SHA256: strings.Repeat("f", 64)}}
+		}, "supporting artifact path"},
 		{"parity mismatch", func(metadata *upstreamMetadata) {
 			metadata.DifferentialParityAttestations[0].NativeResult.SHA256 = strings.Repeat("f", 64)
 		}, "native result hash mismatch"},

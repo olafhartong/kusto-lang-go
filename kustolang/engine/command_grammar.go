@@ -945,7 +945,7 @@ func (p *queryParserState) commandSkippedTokensContinueLongerProduction(command 
 			continue
 		}
 		for _, alternative := range candidate.Elements[len(base)].Alternatives {
-			if strings.EqualFold(firstText, alternative) {
+			if ordinalEqualFold(firstText, alternative) {
 				return true
 			}
 		}

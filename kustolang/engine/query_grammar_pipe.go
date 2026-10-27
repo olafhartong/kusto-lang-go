@@ -1,7 +1,5 @@
 package kustolang
 
-import "strings"
-
 // Ported from the common query-operator and pipe-expression productions in
 // src/Kusto.Language/Parser/QueryGrammar.cs. The operator alternatives grow
 // incrementally as each native combinator production is ported.
@@ -2049,7 +2047,7 @@ func (g *QueryGrammar) initializePipeExpressionParsers() {
 		)
 	}
 	isInlineDelta := func(kind *InlineExternalTableKindClause) bool {
-		return kind != nil && kind.Value() != nil && strings.EqualFold(kind.Value().ValueText(), "delta")
+		return kind != nil && kind.Value() != nil && ordinalEqualFold(kind.Value().ValueText(), "delta")
 	}
 	partitionTypeToken := FirstValue(
 		SyntaxTokenKindParser(SyntaxKindDateTimeKeyword, NewCompletionItem(CompletionKindScalarType, "datetime")),
@@ -2679,7 +2677,7 @@ func queryGrammarParameterValueParser(g *QueryGrammar, parameter *QueryOperatorP
 		if len(values) > 0 {
 			allowedTokens := MatchValue(func(token LexicalToken) bool {
 				for _, value := range values {
-					if (parameter.IsCaseSensitive() && token.Text == value) || (!parameter.IsCaseSensitive() && strings.EqualFold(token.Text, value)) {
+					if (parameter.IsCaseSensitive() && token.Text == value) || (!parameter.IsCaseSensitive() && ordinalEqualFold(token.Text, value)) {
 						return true
 					}
 				}

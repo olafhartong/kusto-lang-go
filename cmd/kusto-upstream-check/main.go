@@ -45,13 +45,14 @@ type upstreamProfile struct {
 }
 
 type differentialParityAttestation struct {
-	Name         string         `json:"name"`
-	Commit       string         `json:"commit"`
-	QueryCount   int            `json:"query_count"`
-	Corpus       parityArtifact `json:"corpus"`
-	Generator    parityArtifact `json:"generator"`
-	OracleResult parityArtifact `json:"oracle_result"`
-	NativeResult parityArtifact `json:"native_result"`
+	Name                string           `json:"name"`
+	Commit              string           `json:"commit"`
+	QueryCount          int              `json:"query_count"`
+	Corpus              parityArtifact   `json:"corpus"`
+	Generator           parityArtifact   `json:"generator"`
+	OracleResult        parityArtifact   `json:"oracle_result"`
+	NativeResult        parityArtifact   `json:"native_result"`
+	SupportingArtifacts []parityArtifact `json:"supporting_artifacts,omitempty"`
 }
 
 type parityArtifact struct {
@@ -359,6 +360,11 @@ func verifyDifferentialParityAttestations(root string, metadata upstreamMetadata
 		}
 		if attestation.OracleResult.SHA256 != attestation.NativeResult.SHA256 {
 			return fmt.Errorf("%s oracle and native result hashes do not match", label)
+		}
+		for _, artifact := range attestation.SupportingArtifacts {
+			if err := verifyParityArtifact(root, label+" supporting artifact", artifact); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

@@ -298,20 +298,11 @@ func addOrReplaceCluster(clusters []*ClusterSymbol, replacement *ClusterSymbol) 
 }
 
 func clusterHostNamesEqual(left, right string) bool {
-	return strings.EqualFold(left, right)
+	return ordinalEqualFold(left, right)
 }
 
 func isShortClusterHostName(name, hostName, domain string) bool {
-	if domain == "" || !strings.HasPrefix(domain, ".") || len(hostName) <= len(domain) ||
-		!strings.HasSuffix(strings.ToLower(hostName), strings.ToLower(domain)) {
-		return false
-	}
-	shortLength := len(hostName) - len(domain)
-	short := hostName[:shortLength]
-	if short == "" || strings.HasSuffix(short, ".") || strings.Count(short, ".") >= 2 {
-		return false
-	}
-	return len(name)+len(domain) == len(hostName) && strings.EqualFold(name, short)
+	return IsShortHostName(name, hostName, domain)
 }
 
 func (g *GlobalState) WithOptions(options []*OptionSymbol) *GlobalState {

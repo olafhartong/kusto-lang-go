@@ -1,7 +1,5 @@
 package kustolang
 
-import "strings"
-
 // Ported from Binder_TreeBinder.cs. This initial native tranche binds children
 // before parents and carries the left side of a pipe as row scope while binding
 // its operator.
@@ -1642,14 +1640,14 @@ func queryOperatorBooleanParameterValue(parameters *SyntaxListOf[*NamedParameter
 		return false, false
 	}
 	for _, parameter := range parameters.Elements() {
-		if parameter == nil || !strings.EqualFold(NameDeclarationSimpleName(parameter.Name()), name) {
+		if parameter == nil || !ordinalEqualFold(NameDeclarationSimpleName(parameter.Name()), name) {
 			continue
 		}
 		literal, ok := parameter.Expression().(*LiteralExpression)
 		if !ok || literal.Kind() != SyntaxKindBooleanLiteralExpression || literal.Token() == nil {
 			return false, false
 		}
-		return strings.EqualFold(literal.Token().ValueText(), "true"), true
+		return ordinalEqualFold(literal.Token().ValueText(), "true"), true
 	}
 	return false, false
 }
@@ -1846,7 +1844,7 @@ func supportsRangeOperator(node *RangeOperator) bool {
 	}
 	if syntaxElementIsMissing(node.StepToken()) && !rangeHasMissingEndpointExpression(node) {
 		toReference, recoveredStepIdentifier := node.To().(*NameReference)
-		if !recoveredStepIdentifier || !strings.EqualFold(NameReferenceSimpleName(toReference), "step") ||
+		if !recoveredStepIdentifier || !ordinalEqualFold(NameReferenceSimpleName(toReference), "step") ||
 			syntaxElementHasMissingChildren(node.From()) || syntaxElementHasMissingChildren(node.To()) || syntaxElementHasMissingChildren(node.Step()) {
 			return false
 		}

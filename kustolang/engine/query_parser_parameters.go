@@ -1,7 +1,5 @@
 package kustolang
 
-import "strings"
-
 // Ported from the query-operator-parameter region of
 // src/Kusto.Language/Parser/QueryParser.cs.
 // This is an initial native slice for known name=value parameters used by the
@@ -452,7 +450,7 @@ func (p *queryParserState) parseIdentifierOrKeywordTokenLiteral() Expression {
 func (p *queryParserState) parseTokenLiteral(values []string, caseSensitive bool) Expression {
 	token := p.peekToken()
 	for _, value := range values {
-		if (caseSensitive && token.Text == value) || (!caseSensitive && strings.EqualFold(token.Text, value)) {
+		if (caseSensitive && token.Text == value) || (!caseSensitive && ordinalEqualFold(token.Text, value)) {
 			return MustNewLiteralExpressionTyped(SyntaxKindTokenLiteralExpression, p.parseToken())
 		}
 	}

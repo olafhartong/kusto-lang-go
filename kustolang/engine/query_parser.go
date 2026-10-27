@@ -141,7 +141,7 @@ func queryStatementsHaveSourceTailBoundaryOperator(statements SyntaxElement) boo
 
 func isDatabaseSourceElementBaseSyntax(expression Expression) bool {
 	call, ok := expression.(*FunctionCallExpression)
-	return ok && call.Name() != nil && strings.EqualFold(NameReferenceSimpleName(call.Name()), "database")
+	return ok && call.Name() != nil && ordinalEqualFold(NameReferenceSimpleName(call.Name()), "database")
 }
 
 func queryStatementsHaveTopWithTailStatement(statements SyntaxElement) bool {
@@ -310,7 +310,7 @@ func queryStatementsStartWithNameExpression(statements SyntaxElement, name strin
 		return false
 	}
 	reference, ok := statement.Expression().(*NameReference)
-	return ok && strings.EqualFold(NameReferenceSimpleName(reference), name)
+	return ok && ordinalEqualFold(NameReferenceSimpleName(reference), name)
 }
 
 func queryStatementsStartWithMalformedQueryParametersDeclaration(statements SyntaxElement) bool {
@@ -433,7 +433,7 @@ func (p *queryParserState) shouldPreserveCurrentRangeElementRecovery(statements 
 		return false
 	}
 	rangeName, ok := element.Expression().(*NameReference)
-	if !ok || !strings.EqualFold(NameReferenceSimpleName(rangeName), "range") {
+	if !ok || !ordinalEqualFold(NameReferenceSimpleName(rangeName), "range") {
 		return false
 	}
 	selector, ok := element.Selector().(*BracketedExpression)
@@ -450,7 +450,7 @@ func (p *queryParserState) shouldPreserveCurrentRangeElementRecovery(statements 
 		return false
 	}
 	fromName, ok := second.(*NameReference)
-	if !ok || !strings.EqualFold(NameReferenceSimpleName(fromName), "from") {
+	if !ok || !ordinalEqualFold(NameReferenceSimpleName(fromName), "from") {
 		return false
 	}
 	if separator := secondSeparated.Separator(); separator == nil || separator.Kind() != SyntaxKindSemicolonToken || separator.RawText() != "" {

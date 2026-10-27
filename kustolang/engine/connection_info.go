@@ -80,7 +80,7 @@ func (c *ConnectionInfo) DataSource() string {
 }
 
 func connectionPartKey(name string) string {
-	return strings.ToLower(name)
+	return ordinalIgnoreCaseKey(name)
 }
 
 func scanConnectionWhitespace(text string, start int) int {

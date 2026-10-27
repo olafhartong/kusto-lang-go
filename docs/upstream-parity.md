@@ -5,6 +5,29 @@ Apache-2.0 source revision recorded in `third_party/kusto/UPSTREAM.json`. It
 does not disassemble or load `Microsoft.Azure.Kusto.Language`, and no .NET
 runtime is used by the library or binary.
 
+## Current upstream update
+
+The current pin is Microsoft Kusto.Language 13.0.0 at
+`328e05d10d6c73654e416675fc75af7ed0e05ffd` (2026-10-22).
+The [upstream changelog](../UPSTREAM_CHANGELOG.md) records affected areas,
+functions, observed behavior, and earlier source updates. The
+[development source oracle](../tools/upstream-oracle/README.md) rebuilds the
+unmodified pinned C# source and independently replays both attested corpora.
+All 489 existing cases still match exactly. The additional 13.0.0 fixture
+covers ordinal Unicode comparison, wildcard middle segments, UTF-16 and byte
+scanners, bounded text sources, literal values, completion ordering, and
+invariant completion examples. Its source output is identical under en-US,
+fr-FR, tr-TR, da-DK, and cs-CZ. Supporting artifact hashes bind both the fixture
+and its source/native oracle tools to the query attestation.
+
+Case-insensitive names, host names, values, and natural sorting use .NET-style
+ordinal casing, including supplementary letters and the ASCII/non-ASCII
+boundaries. Full string ignore-case ordering follows the modern .NET ICU
+scalar comparison; sensitive ordering and truncated UTF-16 segments retain
+code-unit ordering. Machine culture does not affect these operations. Native
+raw hexadecimal integer tokens retain their previous Go convenience; typed
+hexadecimal integer literals follow upstream zero-value recovery.
+
 ## Language and editor coverage
 
 The detailed coverage below was carried forward from the combined project.
@@ -502,10 +525,11 @@ every public and internal C# API. Full upstream parity still requires:
   thread-local `CultureInfo.CurrentCulture`, which has no direct Go standard-
   library equivalent; null, booleans, and custom `ToString()` behavior are
   represented explicitly without a process-global locale shim;
-- current-culture `.NET Convert.ChangeType` and string comparison behavior in
-  `ValueComparer`. Native null, reference/value identity, NaN, numeric
-  precedence, and conversion-failure behavior are represented, but Go's
-  standard library has no per-thread `CultureInfo` equivalent;
+- current-culture `.NET Convert.ChangeType` behavior for arbitrary generic
+  values in `ValueComparer`. String comparison is now ordinal, matching
+  13.0.0; native null, reference/value identity, NaN, numeric precedence, and
+  conversion-failure behavior are represented. Go's standard library has no
+  per-thread `CultureInfo` equivalent for arbitrary object conversion;
 - source-compatible UTF-16 widths and coordinates for direct public AST
   consumers under the existing unsuffixed method names. Analyzer/editor
   diagnostics and explicit `UTF16*` AST methods are UTF-16, but the current

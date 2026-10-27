@@ -46,7 +46,9 @@ make provenance
 
 [Using the language layer](docs/using-kustolang.md) covers schema loading and
 embedding. [Sentinel metadata](docs/sentinel-functions.md) describes the bundled
-MIT-licensed function metadata. [Upstream parity](docs/upstream-parity.md)
+MIT-licensed function metadata. The [Microsoft upstream changelog](UPSTREAM_CHANGELOG.md)
+records affected areas, functions, and observed behavior across source updates.
+[Upstream parity](docs/upstream-parity.md)
 records source-port coverage and remaining differences.
 
 ## Use the language model

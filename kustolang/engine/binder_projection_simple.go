@@ -340,7 +340,7 @@ func projectReorderSort(columns []*ColumnSymbol, kind SyntaxKind) {
 		if granny {
 			comparison = StringAndNumberCompareOrdinalIgnoreCase(columns[i].SymbolName(), columns[j].SymbolName())
 		} else {
-			comparison = strings.Compare(strings.ToLower(columns[i].SymbolName()), strings.ToLower(columns[j].SymbolName()))
+			comparison = ordinalCompare(columns[i].SymbolName(), columns[j].SymbolName(), true)
 		}
 		if descending {
 			return comparison > 0
@@ -1604,7 +1604,7 @@ func queryOperatorParameterNameLocation(declaration *NameDeclaration) SyntaxElem
 
 func stringInParameterValues(value string, values []string, caseSensitive bool) bool {
 	for _, candidate := range values {
-		if caseSensitive && value == candidate || !caseSensitive && strings.EqualFold(value, candidate) {
+		if caseSensitive && value == candidate || !caseSensitive && ordinalEqualFold(value, candidate) {
 			return true
 		}
 	}

@@ -2723,7 +2723,7 @@ func dynamicBagPropertyByFoldedName(bag *DynamicBagSymbol, name string) (*Column
 		}
 	}
 	for _, property := range bag.Properties() {
-		if property != nil && strings.EqualFold(property.SymbolName(), name) {
+		if property != nil && ordinalEqualFold(property.SymbolName(), name) {
 			return property, true
 		}
 	}

@@ -7,3 +7,5 @@ coverage.out
 /go.work
 /go.work.sum
 /publish/
+/tools/upstream-oracle/**/bin/
+/tools/upstream-oracle/**/obj/

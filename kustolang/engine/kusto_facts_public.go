@@ -3,6 +3,7 @@ package kustolang
 import (
 	"strings"
 	"unicode"
+	"unicode/utf16"
 	"unicode/utf8"
 )
 
@@ -113,7 +114,7 @@ func GetExpressionResultName(expression Expression, defaultName string, rowScope
 }
 
 func IsHostName(name, hostName string) bool {
-	return strings.EqualFold(name, hostName)
+	return ordinalEqualFold(name, hostName)
 }
 
 func GetHostName(clusterURIOrName string) string {
@@ -190,14 +191,15 @@ func GetFullHostName(hostname, defaultDomainSuffix string) string {
 }
 
 func HasShortHostName(hostname, defaultDomainSuffix string) bool {
-	if !strings.HasPrefix(defaultDomainSuffix, ".") || len(hostname) <= len(defaultDomainSuffix) || !strings.EqualFold(hostname[len(hostname)-len(defaultDomainSuffix):], defaultDomainSuffix) {
+	if !strings.HasPrefix(defaultDomainSuffix, ".") || utf16TextWidth(hostname) <= utf16TextWidth(defaultDomainSuffix) || !ordinalHasSuffix(hostname, defaultDomainSuffix) {
 		return false
 	}
-	return possibleShortHostNamePart(hostname[:len(hostname)-len(defaultDomainSuffix)])
+	units := utf16.Encode([]rune(hostname))
+	return possibleShortHostNamePart(string(utf16.Decode(units[:len(units)-utf16TextWidth(defaultDomainSuffix)])))
 }
 
 func IsShortHostName(name, hostName, defaultDomainSuffix string) bool {
-	return HasShortHostName(hostName, defaultDomainSuffix) && len(name)+len(defaultDomainSuffix) == len(hostName) && strings.EqualFold(hostName[:len(name)], name)
+	return HasShortHostName(hostName, defaultDomainSuffix) && utf16TextWidth(name)+utf16TextWidth(defaultDomainSuffix) == utf16TextWidth(hostName) && ordinalHasPrefix(hostName, name)
 }
 
 func IsPossibleShortHostName(name string) bool {

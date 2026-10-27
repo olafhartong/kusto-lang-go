@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -156,7 +157,7 @@ func (t *SyntaxToken) Value() any {
 
 	switch t.kind {
 	case SyntaxKindBooleanLiteralToken:
-		return strings.EqualFold(t.valueText, "true")
+		return ordinalEqualFold(t.valueText, "true")
 	case SyntaxKindIntLiteralToken:
 		if t.valueText == "min" {
 			return int(math.MinInt32)
@@ -164,7 +165,10 @@ func (t *SyntaxToken) Value() any {
 		if t.valueText == "max" {
 			return int(math.MaxInt32)
 		}
-		v, _ := strconv.ParseInt(t.valueText, 0, 0)
+		v, err := strconv.ParseInt(strings.TrimSpace(t.valueText), 10, 32)
+		if err != nil {
+			return int(0)
+		}
 		return int(v)
 	case SyntaxKindLongLiteralToken:
 		text := strings.TrimSuffix(strings.TrimSuffix(t.valueText, "L"), "l")
@@ -174,7 +178,14 @@ func (t *SyntaxToken) Value() any {
 		if text == "max" {
 			return int64(math.MaxInt64)
 		}
-		v, _ := strconv.ParseInt(text, 0, 64)
+		base := 10
+		if literalPrefixLength(t.text) == 0 && (strings.HasPrefix(text, "0x") || strings.HasPrefix(text, "0X")) {
+			base = 0
+		}
+		v, err := strconv.ParseInt(strings.TrimSpace(text), base, 64)
+		if err != nil {
+			return int64(0)
+		}
 		return v
 	case SyntaxKindRealLiteralToken:
 		if t.valueText == "min" {
@@ -183,8 +194,7 @@ func (t *SyntaxToken) Value() any {
 		if t.valueText == "max" {
 			return math.MaxFloat64
 		}
-		v, _ := strconv.ParseFloat(t.valueText, 64)
-		return v
+		return realLiteralValue(t.valueText)
 	case SyntaxKindDecimalLiteralToken:
 		return decimalLiteralValue(t.valueText)
 	case SyntaxKindTimespanLiteralToken:
@@ -200,6 +210,38 @@ func (t *SyntaxToken) Value() any {
 	}
 }
 
+// .NET NumberStyles.Float accepts decimal/exponent syntax, but Go also accepts
+// hexadecimal floats and underscores. Keep those out of authored literal values.
+var invariantFloatPattern = regexp.MustCompile(`^[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$`)
+
+func realLiteralValue(text string) float64 {
+	text = strings.TrimSpace(text)
+	integralEnd := strings.IndexAny(text, ".eE")
+	if integralEnd < 0 {
+		integralEnd = len(text)
+	}
+	for i, ch := range text {
+		if ch == ',' && (i == 0 || i >= integralEnd || (text[i-1] != ',' && (text[i-1] < '0' || text[i-1] > '9'))) {
+			return 0
+		}
+	}
+	text = strings.ReplaceAll(text, ",", "")
+	if ordinalEqualFold(text, "NaN") || ordinalEqualFold(text, "+NaN") || ordinalEqualFold(text, "-NaN") {
+		return math.NaN()
+	}
+	if ordinalEqualFold(text, "Infinity") || ordinalEqualFold(text, "+Infinity") {
+		return math.Inf(1)
+	}
+	if ordinalEqualFold(text, "-Infinity") {
+		return math.Inf(-1)
+	}
+	if !invariantFloatPattern.MatchString(text) {
+		return 0
+	}
+	value, _ := strconv.ParseFloat(text, 64)
+	return value
+}
+
 var maxDecimalValue, _ = new(big.Int).SetString("79228162514264337593543950335", 10)
 
 func decimalLiteralValue(valueText string) *big.Rat {
@@ -209,8 +251,12 @@ func decimalLiteralValue(valueText string) *big.Rat {
 	case "max":
 		return new(big.Rat).SetInt(new(big.Int).Set(maxDecimalValue))
 	}
+	valueText = strings.TrimSpace(valueText)
+	if strings.HasSuffix(valueText, "+") || strings.HasSuffix(valueText, "-") {
+		valueText = valueText[len(valueText)-1:] + valueText[:len(valueText)-1]
+	}
 	value, ok := new(big.Rat).SetString(valueText)
-	if !ok || strings.ContainsAny(valueText, "/eE") {
+	if !ok || !invariantFloatPattern.MatchString(valueText) || strings.ContainsAny(valueText, "/eE") {
 		return new(big.Rat)
 	}
 	limit := new(big.Rat).SetInt(maxDecimalValue)
@@ -298,6 +344,9 @@ func parseTimeSpanClock(valueText string) (TimeSpanValue, bool) {
 	}
 	parts := strings.Split(valueText, ":")
 	if len(parts) == 1 {
+		if strings.ContainsAny(valueText, ".,/eE") {
+			return 0, false
+		}
 		days, ok := new(big.Rat).SetString(valueText)
 		if !ok {
 			return 0, false
@@ -401,6 +450,11 @@ func dateTimeLiteralValue(valueText string) time.Time {
 		"2006-01-02",
 		"2006-1-2",
 		"2006/01/02",
+		"1/2/2006",
+		"01/02/2006",
+		"1/2/2006 15:04:05",
+		"January 2, 2006",
+		"Jan 2, 2006",
 		"2006-01-02T15:04:05.999999999",
 		"2006-01-02 15:04:05.999999999",
 		"2006-1-2 15:04:05.999999999",

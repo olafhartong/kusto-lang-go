@@ -947,7 +947,7 @@ func joinKindParameterValue(node *JoinOperator) string {
 		return ""
 	}
 	for _, parameter := range node.Parameters().Elements() {
-		if parameter == nil || parameter.Name() == nil || !strings.EqualFold(NameDeclarationSimpleName(parameter.Name()), "kind") {
+		if parameter == nil || parameter.Name() == nil || !ordinalEqualFold(NameDeclarationSimpleName(parameter.Name()), "kind") {
 			continue
 		}
 		if value := ExpressionLiteralValueInfo(parameter.Expression()); value != nil {

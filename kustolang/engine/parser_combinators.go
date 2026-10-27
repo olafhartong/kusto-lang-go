@@ -2,7 +2,6 @@ package kustolang
 
 import (
 	"reflect"
-	"strings"
 	"sync"
 )
 
@@ -259,21 +258,24 @@ func (s *TextSource) Matches(start int, text string, ignoreCase ...bool) bool {
 	}
 	offs := s.offset + start
 	if len(ignoreCase) > 0 {
-		return s.matchesAt(offs, text, ignoreCase[0])
+		if ignoreCase[0] {
+			return offs >= 0 && offs <= s.end && s.end <= len(s.source) && scanOrdinalText(s, start, text) >= 0
+		}
+		return s.matchesAt(offs, text, false)
 	}
-	if offs < 0 || offs >= len(s.source) || len(text) == 0 || s.source[offs] != text[0] {
+	if offs < 0 || offs >= s.end || len(text) == 0 || s.source[offs] != text[0] {
 		return false
 	}
 	return s.matchesAt(offs, text, false)
 }
 
 func (s *TextSource) matchesAt(offset int, text string, ignoreCase bool) bool {
-	if s == nil || offset < 0 || offset+len(text) > len(s.source) {
+	if s == nil || offset < 0 || offset > s.end || len(text) > s.end-offset || offset+len(text) > len(s.source) {
 		return false
 	}
 	got := s.source[offset : offset+len(text)]
 	if ignoreCase {
-		return strings.EqualFold(got, text)
+		return ordinalEqualFold(got, text)
 	}
 	return got == text
 }

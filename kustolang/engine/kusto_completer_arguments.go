@@ -1,10 +1,8 @@
 package kustolang
 
 import (
-	"fmt"
 	"sort"
 	"strings"
-	"time"
 )
 
 // Ported from the function-argument completion path in
@@ -695,14 +693,10 @@ func functionParameterValueExample(parameter *Parameter, value any) string {
 	switch typed := value.(type) {
 	case string:
 		if parameter == nil || !parameter.IsCaseSensitive {
-			typed = strings.ToLower(typed)
+			typed = invariantLower(typed)
 		}
 		return GetSingleQuotedStringLiteral(typed)
-	case time.Time:
-		return "datetime(" + typed.String() + ")"
-	case time.Duration:
-		return "timespan(" + typed.String() + ")"
 	default:
-		return fmt.Sprint(value)
+		return invariantCompletionValue(value)
 	}
 }

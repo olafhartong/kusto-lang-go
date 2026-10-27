@@ -1,7 +1,5 @@
 package kustolang
 
-import "strings"
-
 // Ported from src/Kusto.Language/Symbols/SymbolMatch.cs.
 // See third_party/kusto/LICENSE for the preserved Apache-2.0 license.
 
@@ -283,7 +281,7 @@ func isSymbolTypeOrVariable(symbol Symbol, predicate func(Symbol) bool) bool {
 func matchesSymbolPrimaryName(symbol Symbol, name string, ignoreCase bool) bool {
 	symbolName := symbol.SymbolName()
 	if ignoreCase {
-		return strings.EqualFold(symbolName, name)
+		return ordinalEqualFold(symbolName, name)
 	}
 	return name != "" && symbolName != "" && name[0] == symbolName[0] && symbolName == name
 }

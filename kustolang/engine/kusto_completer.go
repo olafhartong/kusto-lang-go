@@ -122,13 +122,13 @@ func (c *kustoCompleter) orderCompletionItems(items []CompletionItem) []Completi
 		ordered = append(ordered, item)
 	}
 	sort.SliceStable(ordered, func(i, j int) bool {
-		return ordered[i].OrderText < ordered[j].OrderText
+		return ordinalCompare(ordered[i].OrderText, ordered[j].OrderText, false) < 0
 	})
 	return ListToReadOnly(ordered)
 }
 
 func (c *kustoCompleter) createOrderText(item CompletionItem) string {
-	return fmt.Sprintf("%02d%d_%s", c.getOrderingRank(item), item.priority, strings.ToLower(item.OrderText))
+	return fmt.Sprintf("%02d%d_%s", c.getOrderingRank(item), item.priority, invariantLower(item.OrderText))
 }
 
 func (c *kustoCompleter) retriggered(item CompletionItem) CompletionItem {
@@ -350,9 +350,9 @@ func commandCompletionItemMatchesPartial(item CompletionItem, partial string) bo
 	if partial == "" {
 		return true
 	}
-	lowerPartial := strings.ToLower(partial)
-	return strings.HasPrefix(strings.ToLower(item.MatchText), lowerPartial) ||
-		strings.HasPrefix(strings.ToLower(item.DisplayText), lowerPartial)
+	lowerPartial := invariantLower(partial)
+	return strings.HasPrefix(invariantLower(item.MatchText), lowerPartial) ||
+		strings.HasPrefix(invariantLower(item.DisplayText), lowerPartial)
 }
 
 func commandTokenPrefixMatches(tokens []string, prefix []string) bool {
@@ -360,7 +360,7 @@ func commandTokenPrefixMatches(tokens []string, prefix []string) bool {
 		return false
 	}
 	for i, token := range prefix {
-		if !strings.EqualFold(tokens[i], token) {
+		if !ordinalEqualFold(tokens[i], token) {
 			return false
 		}
 	}
@@ -405,7 +405,7 @@ func (c *kustoCompleter) commandTokenPrefixBefore(position int) ([]string, bool)
 			return nil, false
 		}
 		if token.Text != "" {
-			prefix = append(prefix, strings.ToLower(token.Text))
+			prefix = append(prefix, invariantLower(token.Text))
 		}
 	}
 	return prefix, true
@@ -490,7 +490,7 @@ func collectCommandNextTokens(elements []commandTokenElement, prefix []string, o
 
 	if len(first.Alternatives) > 0 {
 		for _, alternative := range first.Alternatives {
-			if strings.EqualFold(alternative, prefix[0]) {
+			if ordinalEqualFold(alternative, prefix[0]) {
 				collectCommandNextTokens(rest, prefix[1:], out, depth+1)
 				break
 			}

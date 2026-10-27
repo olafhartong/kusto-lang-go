@@ -3,7 +3,6 @@ package kustolang
 import (
 	"sort"
 	"strconv"
-	"strings"
 )
 
 // Ported from src/Kusto.Language/Editor/Kusto/KustoActors.cs and the actor
@@ -231,6 +230,6 @@ func kustoActorApplyDiagnosticFix(service *KustoCodeService, code *KustoCode, ac
 
 func kustoSortCodeActions(actions []CodeAction) {
 	sort.SliceStable(actions, func(i, j int) bool {
-		return strings.ToLower(actions[i].Base().Title) < strings.ToLower(actions[j].Base().Title)
+		return ordinalCompare(actions[i].Base().Title, actions[j].Base().Title, true) < 0
 	})
 }

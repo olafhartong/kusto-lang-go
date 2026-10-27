@@ -1,7 +1,5 @@
 package kustolang
 
-import "strings"
-
 // Ported from Binder_NodeBinder.VisitRenderOperator.
 func (n *simpleNodeBinder) bindRender(node *RenderOperator) *SemanticInfo {
 	if info, ok := node.GetSemanticInfo(); ok {
@@ -27,7 +25,7 @@ func (n *simpleNodeBinder) bindRender(node *RenderOperator) *SemanticInfo {
 
 func renderChartTypeIsKnown(value string) bool {
 	for _, chartType := range KustoFacts.ChartTypes {
-		if strings.EqualFold(value, chartType) {
+		if ordinalEqualFold(value, chartType) {
 			return true
 		}
 	}

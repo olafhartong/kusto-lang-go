@@ -255,7 +255,7 @@ func isBooleanLiteralText(text string) bool {
 
 func scanGuidLiteralWithCancellation(text string, pos int, poller *lexerCancellationPoller) (string, int, bool) {
 	const prefix = "guid("
-	if pos+len(prefix) > len(text) || !strings.EqualFold(text[pos:pos+len(prefix)], prefix) {
+	if pos+len(prefix) > len(text) || !ordinalEqualFold(text[pos:pos+len(prefix)], prefix) {
 		return "", pos, false
 	}
 	innerStart := pos + len(prefix)
@@ -787,7 +787,7 @@ func scanTimespanSuffix(text string, pos int) int {
 			ch, _ := utf8.DecodeRuneInString(text[end:])
 			boundary = !isIdentifierPart(ch)
 		}
-		if strings.EqualFold(text[pos:end], suffix) && boundary {
+		if ordinalEqualFold(text[pos:end], suffix) && boundary {
 			longest = len(suffix)
 		}
 	}

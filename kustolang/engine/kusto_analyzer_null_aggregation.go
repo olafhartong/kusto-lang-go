@@ -2,7 +2,6 @@ package kustolang
 
 import (
 	"fmt"
-	"strings"
 )
 
 // Ported from src/Kusto.Language/Editor/Kusto/Analyzers/NullAggregationAnalyzer.cs.
@@ -73,7 +72,7 @@ func isSumAggregateCall(call *FunctionCallExpression, globals *GlobalState) bool
 	if globals != nil && globals.GetAggregate(name) == Aggregates.Sum {
 		return true
 	}
-	return strings.EqualFold(name, Aggregates.Sum.SymbolName())
+	return ordinalEqualFold(name, Aggregates.Sum.SymbolName())
 }
 
 func referencedFunctionSymbol(call *FunctionCallExpression) *FunctionSymbol {

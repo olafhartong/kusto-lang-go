@@ -6,7 +6,7 @@ Language:
 - Project: Microsoft Kusto Query Language
 - Repository: https://github.com/microsoft/Kusto-Query-Language
 - License: Apache License 2.0 (`Apache-2.0`)
-- Current source revision: `6b5c2f739a14bd5de52115f9bf9695985f0852dd`
+- Current source revision: `328e05d10d6c73654e416675fc75af7ed0e05ffd`
 
 The preserved license text is distributed at `third_party/kusto/LICENSE`. Source
 revision provenance is recorded in

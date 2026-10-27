@@ -1500,7 +1500,7 @@ func matchesSymbolName(symbol Symbol, name string, ignoreCase bool) bool {
 		return false
 	}
 	if ignoreCase {
-		return strings.EqualFold(symbol.SymbolName(), name) || strings.EqualFold(symbol.AlternateName(), name)
+		return ordinalEqualFold(symbol.SymbolName(), name) || ordinalEqualFold(symbol.AlternateName(), name)
 	}
 	return symbol.SymbolName() == name || symbol.AlternateName() == name
 }

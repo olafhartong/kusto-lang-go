@@ -491,7 +491,7 @@ func MatchSequenceWithComparer[TInput any](items []TInput, comparer func(TInput,
 func MatchByte(ch byte, ignoreCase ...bool) Parser[byte] {
 	if len(ignoreCase) > 0 && ignoreCase[0] {
 		return Match(func(input byte) bool {
-			return strings.EqualFold(string([]byte{input}), string([]byte{ch}))
+			return ordinalCaseKey(rune(input)) == ordinalCaseKey(rune(ch))
 		})
 	}
 	return MatchItem(ch)
@@ -502,6 +502,9 @@ func MatchText(text string, ignoreCase ...bool) Parser[byte] {
 		return MatchByte(text[0], ignoreCase...)
 	}
 	ignore := len(ignoreCase) > 0 && ignoreCase[0]
+	if ignore {
+		return MatchConsumer(func(source Source[byte], start int) int { return scanOrdinalText(source, start, text) })
+	}
 	return MatchConsumer(func(source Source[byte], start int) int {
 		if textSource, ok := source.(*TextSource); ok {
 			if textSource.Matches(start, text, ignore) {
@@ -515,12 +518,6 @@ func MatchText(text string, ignoreCase ...bool) Parser[byte] {
 				return ^i
 			}
 			got := source.Peek(start + i)
-			if ignore {
-				if !strings.EqualFold(string([]byte{got}), string([]byte{text[i]})) {
-					return ^i
-				}
-				continue
-			}
 			if got != text[i] {
 				return ^i
 			}

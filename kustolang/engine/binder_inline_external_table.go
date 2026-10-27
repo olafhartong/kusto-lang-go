@@ -1,7 +1,5 @@
 package kustolang
 
-import "strings"
-
 // This file ports the InlineExternalTableExpression and DateTimePattern slice
 // from Binder_TreeBinder and Binder_NodeBinder at upstream cd24dcf.
 
@@ -130,7 +128,7 @@ func (n *simpleNodeBinder) bindInlineExternalTable(node *InlineExternalTableExpr
 	if omitted {
 		columns = nil
 	}
-	delta := strings.EqualFold(node.KindParameter().Value().ValueText(), "delta")
+	delta := ordinalEqualFold(node.KindParameter().Value().ValueText(), "delta")
 	if delta {
 		if node.PartitionClause() != nil {
 			d = append(d, n.binder.diagnosticAtSyntaxElement(DiagnosticInlineExternalTableDeltaPartitionByNotSupported(), node.PartitionClause()))
@@ -239,7 +237,7 @@ func (n *simpleNodeBinder) checkInlineExactType(e Expression, want *TypeSymbol, 
 
 func containsFold(values []string, value string) bool {
 	for _, v := range values {
-		if strings.EqualFold(v, value) {
+		if ordinalEqualFold(v, value) {
 			return true
 		}
 	}

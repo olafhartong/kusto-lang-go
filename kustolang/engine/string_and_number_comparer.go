@@ -93,24 +93,5 @@ func lengthOfNumberUnits(text []uint16, startIndex int) int {
 }
 
 func compareUnitSegment(left []uint16, leftStart int, right []uint16, rightStart int, length int, caseSensitive bool) int {
-	for offset := 0; offset < length; offset++ {
-		leftUnit := left[leftStart+offset]
-		rightUnit := right[rightStart+offset]
-		if !caseSensitive {
-			leftUnit = ordinalIgnoreCaseUnit(leftUnit)
-			rightUnit = ordinalIgnoreCaseUnit(rightUnit)
-		}
-		if leftUnit != rightUnit {
-			return int(leftUnit) - int(rightUnit)
-		}
-	}
-	return 0
-}
-
-func ordinalIgnoreCaseUnit(unit uint16) uint16 {
-	upper := unicode.ToUpper(rune(unit))
-	if upper <= 0xffff {
-		return uint16(upper)
-	}
-	return unit
+	return ordinalCompareUnits(left[leftStart:leftStart+length], right[rightStart:rightStart+length], !caseSensitive)
 }

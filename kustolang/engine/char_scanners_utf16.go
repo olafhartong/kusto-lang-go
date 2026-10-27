@@ -1,7 +1,6 @@
 package kustolang
 
 import (
-	"unicode"
 	"unicode/utf16"
 )
 
@@ -18,19 +17,26 @@ func UTF16Chars(text string, ignoreCase ...bool) Parser[uint16] {
 	if len(units) == 1 {
 		return UTF16Char(units[0], ignore)
 	}
-	lower := make([]uint16, len(units))
-	upper := make([]uint16, len(units))
-	for i, unit := range units {
-		lower[i] = utf16SimpleCase(unit, unicode.ToLower)
-		upper[i] = utf16SimpleCase(unit, unicode.ToUpper)
-	}
 	return MatchConsumer(func(source Source[uint16], start int) int {
 		for i, unit := range units {
 			if source.IsEnd(start + i) {
 				return ^i
 			}
 			got := source.Peek(start + i)
-			if got != unit && (!ignore || got != lower[i] && got != upper[i]) {
+			if got != unit {
+				if !ignore {
+					return ^i
+				}
+				candidate := make([]uint16, len(units))
+				for j := range candidate {
+					if source.IsEnd(start + j) {
+						return ^j
+					}
+					candidate[j] = source.Peek(start + j)
+				}
+				if ordinalCompareUnits(candidate, units, true) == 0 {
+					return len(units)
+				}
 				return ^i
 			}
 		}
@@ -40,19 +46,9 @@ func UTF16Chars(text string, ignoreCase ...bool) Parser[uint16] {
 
 func UTF16Char(ch uint16, ignoreCase ...bool) Parser[uint16] {
 	if len(ignoreCase) > 0 && ignoreCase[0] {
-		upper := utf16SimpleCase(ch, unicode.ToUpper)
-		lower := utf16SimpleCase(ch, unicode.ToLower)
-		return Match(func(input uint16) bool { return input == ch || input == upper || input == lower })
+		return Match(func(input uint16) bool { return ordinalCaseKey(rune(input)) == ordinalCaseKey(rune(ch)) })
 	}
 	return MatchItem(ch)
-}
-
-func utf16SimpleCase(ch uint16, convert func(rune) rune) uint16 {
-	mapped := convert(rune(ch))
-	if mapped < 0 || mapped > 0xffff {
-		return ch
-	}
-	return uint16(mapped)
 }
 
 var UTF16Letter Parser[uint16] = Match(func(ch uint16) bool {

@@ -5,7 +5,6 @@ import (
 	"math"
 	"reflect"
 	"strconv"
-	"strings"
 )
 
 // Ported from src/Kusto.Language/Utils/ValueComparer.cs.
@@ -86,7 +85,7 @@ func compareValueStrings(left string, right string, caseSensitive bool) bool {
 	if caseSensitive {
 		return left == right
 	}
-	return strings.EqualFold(left, right)
+	return ordinalEqualFold(left, right)
 }
 
 func valueToString(value any) string {

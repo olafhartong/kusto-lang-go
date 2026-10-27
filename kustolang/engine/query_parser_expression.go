@@ -1087,7 +1087,7 @@ func (p *queryParserState) parseInlineExternalTableKindClause() *InlineExternalT
 }
 
 func isInlineExternalTableDeltaKind(kindClause *InlineExternalTableKindClause) bool {
-	return kindClause != nil && kindClause.Value() != nil && strings.EqualFold(kindClause.Value().ValueText(), "delta")
+	return kindClause != nil && kindClause.Value() != nil && ordinalEqualFold(kindClause.Value().ValueText(), "delta")
 }
 
 func (p *queryParserState) parseInlineExternalTableDataFormatClause(kindClause *InlineExternalTableKindClause) *InlineExternalTableDataFormatClause {
@@ -1348,7 +1348,7 @@ func (p *queryParserState) parseInlineExternalTableConnectionStringsClause() *In
 
 func stringSliceContainsFold(values []string, needle string) bool {
 	for _, value := range values {
-		if strings.EqualFold(value, needle) {
+		if ordinalEqualFold(value, needle) {
 			return true
 		}
 	}

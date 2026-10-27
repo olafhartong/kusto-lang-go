@@ -1,6 +1,6 @@
 package kustolang
 
-import "strings"
+import "unicode/utf16"
 
 // Ported from the parser facts in src/Kusto.Language/Parser/KustoFacts.cs that
 // are referenced by QueryOperatorParameters.cs and built-in function metadata.
@@ -196,11 +196,17 @@ func KustoFactsMatches(pattern string, text string, ignoreCase ...bool) bool {
 	if len(ignoreCase) > 0 {
 		ignore = ignoreCase[0]
 	}
-	return kustoFactsMatches(pattern, 0, text, 0, ignore)
+	return kustoFactsMatches(utf16.Encode([]rune(pattern)), 0, utf16.Encode([]rune(text)), 0, ignore)
 }
 
-func kustoFactsMatches(pattern string, patternSegmentStart int, text string, textPosition int, ignoreCase bool) bool {
-	asteriskPosition := strings.IndexByte(pattern[patternSegmentStart:], '*')
+func kustoFactsMatches(pattern []uint16, patternSegmentStart int, text []uint16, textPosition int, ignoreCase bool) bool {
+	asteriskPosition := -1
+	for i, ch := range pattern[patternSegmentStart:] {
+		if ch == '*' {
+			asteriskPosition = i
+			break
+		}
+	}
 	sawAsterisk := asteriskPosition >= 0
 	if sawAsterisk {
 		asteriskPosition += patternSegmentStart
@@ -240,7 +246,7 @@ func kustoFactsMatches(pattern string, patternSegmentStart int, text string, tex
 		return patternSegmentLength <= len(text)-textPosition &&
 			compareKustoFactSegment(text, len(text)-patternSegmentLength, pattern, patternSegmentStart, patternSegmentLength, ignoreCase)
 	default:
-		matchesPosition := indexOfKustoFactSegment(text, textPosition, pattern, patternSegmentStart, patternSegmentLength)
+		matchesPosition := indexOfKustoFactSegment(text, textPosition, pattern, patternSegmentStart, patternSegmentLength, ignoreCase)
 		if matchesPosition == -1 {
 			return false
 		}
@@ -248,35 +254,23 @@ func kustoFactsMatches(pattern string, patternSegmentStart int, text string, tex
 	}
 }
 
-func compareKustoFactSegment(text string, textStart int, pattern string, patternStart int, length int, ignoreCase bool) bool {
+func compareKustoFactSegment(text []uint16, textStart int, pattern []uint16, patternStart int, length int, ignoreCase bool) bool {
 	if textStart < 0 || patternStart < 0 || textStart+length > len(text) || patternStart+length > len(pattern) {
 		return false
 	}
 	left := text[textStart : textStart+length]
 	right := pattern[patternStart : patternStart+length]
-	if ignoreCase {
-		return strings.EqualFold(left, right)
-	}
-	return left == right
+	return ordinalCompareUnits(left, right, ignoreCase) == 0
 }
 
-func indexOfKustoFactSegment(text string, textStart int, value string, valueStart int, valueLength int) int {
+func indexOfKustoFactSegment(text []uint16, textStart int, value []uint16, valueStart int, valueLength int, ignoreCase bool) int {
 	if textStart < 0 || textStart > len(text) || valueStart < 0 || valueStart+valueLength > len(value) || valueLength == 0 {
 		return -1
 	}
-	firstChar := value[valueStart]
-	for {
-		firstCharPosition := strings.IndexByte(text[textStart:], firstChar)
-		if firstCharPosition < 0 {
-			return -1
+	for position := textStart; position+valueLength <= len(text); position++ {
+		if compareKustoFactSegment(text, position, value, valueStart, valueLength, ignoreCase) {
+			return position
 		}
-		firstCharPosition += textStart
-		if firstCharPosition+valueLength > len(text) {
-			return -1
-		}
-		if text[firstCharPosition:firstCharPosition+valueLength] == value[valueStart:valueStart+valueLength] {
-			return firstCharPosition
-		}
-		textStart = firstCharPosition + 1
 	}
+	return -1
 }

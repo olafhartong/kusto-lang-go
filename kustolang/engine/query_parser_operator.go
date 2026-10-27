@@ -1,7 +1,5 @@
 package kustolang
 
-import "strings"
-
 const declarationRootPipeOnlyRecoveryPayload = "DeclarationRootPipeOnlyRecovery"
 
 // This file implements query-operator parsing.
@@ -2678,7 +2676,7 @@ func (p *queryParserState) scanMacroExpandEntityPathStart() bool {
 	if token.Kind == SyntaxKindDatabaseKeyword {
 		return p.scanFunctionCallStart()
 	}
-	if token.Kind == SyntaxKindIdentifierToken && strings.EqualFold(token.Text, "cluster") {
+	if token.Kind == SyntaxKindIdentifierToken && ordinalEqualFold(token.Text, "cluster") {
 		return p.scanFunctionCallStart()
 	}
 	return false

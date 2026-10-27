@@ -3,7 +3,6 @@ package kustolang
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 // Ported from src/Kusto.Language/PlugIns.cs.
@@ -573,7 +572,7 @@ func pluginBagUnpackReturn(context CustomReturnTypeContext) Symbol {
 		if reference, ok := context.Arguments[0].(*NameReference); ok {
 			name := NameReferenceSimpleName(reference)
 			for _, column := range context.RowScope.Columns() {
-				if column != nil && strings.EqualFold(column.SymbolName(), name) {
+				if column != nil && ordinalEqualFold(column.SymbolName(), name) {
 					excludedName = column.SymbolName()
 					if excluded == nil {
 						excluded = column
@@ -585,7 +584,7 @@ func pluginBagUnpackReturn(context CustomReturnTypeContext) Symbol {
 	}
 	columns := []*ColumnSymbol{}
 	for _, column := range rowScopeColumns(context) {
-		if len(context.Arguments) == 0 || (column != excluded && (excludedName == "" || !strings.EqualFold(column.SymbolName(), excludedName))) {
+		if len(context.Arguments) == 0 || (column != excluded && (excludedName == "" || !ordinalEqualFold(column.SymbolName(), excludedName))) {
 			columns = append(columns, column)
 		}
 	}
@@ -651,7 +650,7 @@ func pluginGeoLookupReturn(lookupKeyParameter *Parameter) CustomReturnType {
 			if key, ok := context.GetArgumentReferencedSymbol(lookupKeyParameter.Name).(*ColumnSymbol); ok {
 				filtered := lookupColumns[:0]
 				for _, column := range lookupColumns {
-					if !strings.EqualFold(column.SymbolName(), key.SymbolName()) {
+					if !ordinalEqualFold(column.SymbolName(), key.SymbolName()) {
 						filtered = append(filtered, column)
 					}
 				}
@@ -668,7 +667,7 @@ func geoPolygonLookupLayout(table, polygonKey, longitude, latitude, radius, unma
 		count := maxInt(len(arguments), len(argumentTypes))
 		out := []*Parameter{table, polygonKey, longitude, latitude}
 		for i := 4; i < count; i++ {
-			switch strings.ToLower(namedArgumentName(expressionAt(arguments, i))) {
+			switch invariantLower(namedArgumentName(expressionAt(arguments, i))) {
 			case "radius":
 				out = append(out, radius)
 			case "return_unmatched":
@@ -690,7 +689,7 @@ func geoLineLookupLayout(table, lineKey, longitude, latitude, radius, unmatched,
 		count := maxInt(len(arguments), len(argumentTypes))
 		out := []*Parameter{table, lineKey, longitude, latitude, radius}
 		for i := 5; i < count; i++ {
-			switch strings.ToLower(namedArgumentName(expressionAt(arguments, i))) {
+			switch invariantLower(namedArgumentName(expressionAt(arguments, i))) {
 			case "return_unmatched":
 				out = append(out, unmatched)
 			case "lookup_area_radius":
@@ -897,7 +896,7 @@ func boolLiteralArgument(context CustomReturnTypeContext, index int) bool {
 func namedBoolLiteralArgument(context CustomReturnTypeContext, parameterName string) bool {
 	for _, argument := range context.Arguments {
 		named, ok := argument.(*SimpleNamedExpression)
-		if !ok || !strings.EqualFold(NameDeclarationSimpleName(named.Name()), parameterName) {
+		if !ok || !ordinalEqualFold(NameDeclarationSimpleName(named.Name()), parameterName) {
 			continue
 		}
 		value, ok := boolLiteralExpressionValue(named.Expression())
@@ -913,7 +912,7 @@ func boolLiteralExpressionValue(expression Expression) (bool, bool) {
 	if !ok || literal.Kind() != SyntaxKindBooleanLiteralExpression || literal.Token() == nil {
 		return false, false
 	}
-	value, err := strconv.ParseBool(strings.ToLower(literal.Token().ValueText()))
+	value, err := strconv.ParseBool(invariantLower(literal.Token().ValueText()))
 	if err != nil {
 		return false, false
 	}

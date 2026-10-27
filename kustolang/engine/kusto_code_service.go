@@ -3,7 +3,6 @@ package kustolang
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"sync"
 	"sync/atomic"
 )
@@ -1110,5 +1109,5 @@ func KustoCodeServiceFactoryIsSql(text string) bool {
 	if firstToken.Text == "-" && len(tokens) > 1 && tokens[1].Text == "-" && tokens[1].Trivia == "" {
 		return true
 	}
-	return strings.EqualFold(firstToken.Text, "select") || strings.EqualFold(firstToken.Text, "with")
+	return ordinalEqualFold(firstToken.Text, "select") || ordinalEqualFold(firstToken.Text, "with")
 }

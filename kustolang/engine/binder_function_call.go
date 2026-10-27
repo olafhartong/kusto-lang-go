@@ -1058,7 +1058,7 @@ func (b *Binder) matchingDatabase(name string, scope Symbol) Symbol {
 	}
 	if scope == nil || scope == b.Globals.Cluster {
 		current := b.Globals.Database
-		if current != nil && (name == "" || strings.EqualFold(current.SymbolName(), name) || strings.EqualFold(current.AlternateName(), name)) {
+		if current != nil && (name == "" || ordinalEqualFold(current.SymbolName(), name) || ordinalEqualFold(current.AlternateName(), name)) {
 			return current
 		}
 	}
@@ -1378,7 +1378,7 @@ func functionLiteralValueAllowed(value any, parameter *Parameter) bool {
 	want := literalDiagnosticValue(value)
 	for _, candidate := range parameter.Values {
 		got := literalDiagnosticValue(candidate)
-		if parameter.IsCaseSensitive && got == want || !parameter.IsCaseSensitive && strings.EqualFold(got, want) {
+		if parameter.IsCaseSensitive && got == want || !parameter.IsCaseSensitive && ordinalEqualFold(got, want) {
 			return true
 		}
 	}
