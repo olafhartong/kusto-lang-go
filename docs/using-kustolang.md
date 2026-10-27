@@ -6,6 +6,10 @@ and editor services. They have **no dependency on KustoKITT**, its REST
 API, its embedded schema catalogs, or the GPL-licensed FalconForce NRT
 catalogs — only the Go standard library at runtime.
 
+For package and API details, see the [language API reference](language-api.md).
+For document integration, see [Editor services](editor-services.md). Build,
+validation, and provenance commands are in the [development guide](development.md).
+
 Architectural boundaries are enforced by tests
 (`internal/guard`) and by an out-of-tree consumer build
 (`tools/langsmoke`, run in CI and via `make langsmoke`).
@@ -165,9 +169,10 @@ operations return `kustolang.OperationCanceledError`.
   [Kusto-Query-Language](https://github.com/microsoft/Kusto-Query-Language)
   C# library (Apache-2.0); parity is tracked in
   [upstream-parity.md](upstream-parity.md).
-- The language layer contains no GPL-licensed material. The FalconForce NRT
-  catalogs (GPL-3.0) are embedded only in the analyzer packages, which the
-  language layer never imports.
+- The repository retains its GPL-3.0 project license, with preserved Apache-2.0
+  notices for the Microsoft source port and MIT attribution for Sentinel
+  metadata. See [licensing and provenance](development.md#licensing-and-provenance).
+  FalconForce NRT catalogs remain in KustoKITT and are not distributed here.
 - The exported surface is pinned by API snapshot tests
   (`internal/guard/testdata/*.golden`); breaking changes are deliberate and
   reviewed.
