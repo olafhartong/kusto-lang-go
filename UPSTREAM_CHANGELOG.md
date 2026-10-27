@@ -11,6 +11,9 @@ or symbols, and confirmed behavior. If behavior has not been measured, describe
 the source update and label it accordingly. Keep the active pin in
 [`third_party/kusto/UPSTREAM.json`](third_party/kusto/UPSTREAM.json); document
 coverage and intentional differences in [`docs/upstream-parity.md`](docs/upstream-parity.md).
+These requirements also apply to future coding agents through
+[`AGENTS.md`](AGENTS.md). Local and CI provenance checks require a populated
+table in the entry linking to the currently pinned revision.
 
 ## 2026-10-22 — 13.0.0
 

@@ -402,6 +402,11 @@ func writeProvenanceTree(t *testing.T) (root, metadataPath string) {
 		}
 	}
 	commit := strings.Repeat("a", 40)
+	changelog := "# Upstream changelog\n\n## Current update\n\nSource: [revision](https://github.com/microsoft/Kusto-Query-Language/commit/" + commit + ")\n\n" +
+		"| Area | Impacted functions or symbols | Confirmed behavior or update |\n| --- | --- | --- |\n| Parser | Parse | Source update: parser implementation refreshed. |\n"
+	if err := os.WriteFile(filepath.Join(root, "UPSTREAM_CHANGELOG.md"), []byte(changelog), 0o600); err != nil {
+		t.Fatal(err)
+	}
 	resultHash := fmt.Sprintf("%x", sha256.Sum256(result))
 	metadata := upstreamMetadata{
 		Name: "Microsoft Kusto Query Language", Repository: "https://github.com/microsoft/Kusto-Query-Language",
@@ -432,6 +437,48 @@ func writeProvenanceTree(t *testing.T) (root, metadataPath string) {
 		t.Fatal(err)
 	}
 	return root, metadataPath
+}
+
+func TestVerifyUpstreamChangelogRequiresPinnedEntryAndDetails(t *testing.T) {
+	metadata := upstreamMetadata{Repository: "https://github.com/microsoft/Kusto-Query-Language", Commit: strings.Repeat("a", 40)}
+	link := "[revision](" + metadata.Repository + "/commit/" + metadata.Commit + ")"
+	header := "| Area | Impacted functions or symbols | Confirmed behavior or update |\n| --- | --- | --- |\n"
+	row := "| Wildcards | KustoFacts.Matches | Ignoring case now applies to middle segments. |\n"
+	entry := "## Current update\n\n" + link + "\n\n"
+	tests := []struct {
+		name, text, want string
+	}{
+		{"missing file", "", "read upstream changelog"},
+		{"stale revision", "## Earlier update\n\n[old](" + metadata.Repository + "/commit/" + strings.Repeat("b", 40) + ")\n\n" + header + row, "must include an entry linking"},
+		{"intro only", link + "\n\n## Earlier update\n\n" + header + row, "must include an entry linking"},
+		{"missing table", entry + "Parser changes.\n", "must contain a populated"},
+		{"table in another entry", entry + "No table.\n\n## Earlier update\n\n" + header + row, "must contain a populated"},
+		{"empty table", entry + header, "must contain a populated"},
+		{"missing area", entry + header + "| | Matches | Matching updated. |\n", "must contain a populated"},
+		{"missing functions", entry + header + "| Parser | | Matching updated. |\n", "must contain a populated"},
+		{"missing behavior", entry + header + "| Parser | Matches | |\n", "must contain a populated"},
+		{"confirmed behavior", entry + header + row, ""},
+		{"described source update", entry + header + "| Tooling | MSbuildSetup | Source update: locate MSBuild with vswhere. |\n", ""},
+		{"historical entries retained", "## Earlier update\n\n" + header + row + "\n" + entry + header + row, ""},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			root := t.TempDir()
+			if test.text != "" {
+				if err := os.WriteFile(filepath.Join(root, "UPSTREAM_CHANGELOG.md"), []byte(test.text), 0o600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			err := verifyUpstreamChangelog(root, metadata)
+			if test.want == "" {
+				if err != nil {
+					t.Fatal(err)
+				}
+			} else if err == nil || !strings.Contains(err.Error(), test.want) {
+				t.Fatalf("error = %v, want %q", err, test.want)
+			}
+		})
+	}
 }
 
 func TestVerifyLocalProvenanceRejectsParityArtifactHashMismatch(t *testing.T) {

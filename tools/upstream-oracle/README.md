@@ -12,6 +12,14 @@ in a temporary folder. The original upstream C# files are compiled unchanged.
 
 From the repository root:
 
+Before refreshing a pin, update `UPSTREAM_CHANGELOG.md` with a dated entry
+linking to the exact upstream commit. Keep the Area / Impacted functions or
+symbols / Confirmed behavior or update table. Give concrete behavior examples
+supported by source-oracle comparisons or regressions; label unmeasured
+changes as **Source update**. Follow the repository's `AGENTS.md` instructions.
+The local provenance check requires the entry for the pinned revision, so CI
+rejects a pin update that omits it.
+
 ```sh
 git clone https://github.com/microsoft/Kusto-Query-Language /tmp/kusto-source
 git -C /tmp/kusto-source checkout 328e05d10d6c73654e416675fc75af7ed0e05ffd

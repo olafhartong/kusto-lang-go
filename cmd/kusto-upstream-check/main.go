@@ -319,7 +319,46 @@ func verifyLocalProvenance(root string, metadata upstreamMetadata) error {
 	if actualNoticeHash != metadata.NoticeSHA256 {
 		return fmt.Errorf("notice hash mismatch: manifest %s, actual %s", metadata.NoticeSHA256, actualNoticeHash)
 	}
-	return nil
+	return verifyUpstreamChangelog(root, metadata)
+}
+
+func verifyUpstreamChangelog(root string, metadata upstreamMetadata) error {
+	const name = "UPSTREAM_CHANGELOG.md"
+	path, err := localProvenancePath(root, name)
+	if err != nil {
+		return fmt.Errorf("upstream changelog path: %w", err)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return fmt.Errorf("read upstream changelog: %w", err)
+	}
+	link := strings.TrimRight(metadata.Repository, "/") + "/commit/" + metadata.Commit
+	const header = "| Area | Impacted functions or symbols | Confirmed behavior or update |"
+	// Scope the table to the pinned revision's entry. A revision mentioned in
+	// the introduction or an unrelated historical table is not enough.
+	for _, section := range strings.Split("\n"+string(data), "\n## ")[1:] {
+		if !strings.Contains(section, "]("+link+")") {
+			continue
+		}
+		_, table, found := strings.Cut(section, header)
+		if found {
+			for _, line := range strings.Split(table, "\n") {
+				line = strings.TrimSpace(line)
+				if line == "" || strings.Trim(line, "| :-\t") == "" {
+					continue
+				}
+				if !strings.HasPrefix(line, "|") {
+					break
+				}
+				cells := strings.SplitN(line, "|", 5)
+				if len(cells) == 5 && strings.TrimSpace(cells[1]) != "" && strings.TrimSpace(cells[2]) != "" && strings.TrimSpace(cells[3]) != "" {
+					return nil
+				}
+			}
+		}
+		return fmt.Errorf("%s entry for %s must contain a populated Area / Impacted functions or symbols / Confirmed behavior or update table", name, metadata.Commit)
+	}
+	return fmt.Errorf("%s must include an entry linking to %s; refresh the changelog with each upstream compatibility update", name, link)
 }
 
 func verifyDifferentialParityAttestations(root string, metadata upstreamMetadata) error {
