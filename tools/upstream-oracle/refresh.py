@@ -29,8 +29,8 @@ def main():
         raise SystemExit("usage: python3 tools/upstream-oracle/refresh.py /path/to/Kusto-Query-Language")
     source = Path(sys.argv[1]).resolve()
     commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
-    if commit != "328e05d10d6c73654e416675fc75af7ed0e05ffd":
-        raise SystemExit("Expected the reviewed 13.0.0 revision 328e05d; refusing to attest another source.")
+    if commit != "82267c7628e70898cd8bec54c20fc4e61c0a523a":
+        raise SystemExit("Expected the reviewed 13.0.0 revision 82267c7; refusing to attest another source.")
     run("git", "-C", str(source), "diff", "--exit-code", "HEAD")
     manifest_path = ROOT / "third_party/kusto/UPSTREAM.json"
     manifest = json.loads(manifest_path.read_text())
@@ -67,20 +67,28 @@ def main():
             attestation["commit"] = commit
             print(f"Matched {len(expected)} cases: {attestation['name']}", flush=True)
         compatibility = None
+        caching = None
         for culture in CULTURES:
             output = temp / "compatibility.json"
-            run("dotnet", str(oracle), "--compatibility", str(output), culture)
+            run("dotnet", str(oracle), "--compatibility", str(output), culture, commit)
             current = json.loads(output.read_text())
             if compatibility is not None and current != compatibility:
                 raise SystemExit(f"Culture-dependent oracle result: {culture}")
             compatibility = current
+            run("dotnet", str(oracle), "--caching", str(output), culture, commit)
+            current = json.loads(output.read_text())
+            if caching is not None and current != caching:
+                raise SystemExit(f"Culture-dependent caching oracle result: {culture}")
+            caching = current
         compatibility["verifiedCultures"] = CULTURES
-        pending["kustolang/engine/testdata/upstream_328e05d_compatibility.json"] = canonical(compatibility)
+        caching["verifiedCultures"] = CULTURES
+        pending[f"kustolang/engine/testdata/upstream_{commit[:7]}_compatibility.json"] = canonical(compatibility)
+        pending[f"kustolang/engine/testdata/upstream_{commit[:7]}_caching.json"] = canonical(caching)
     # Publish only after every comparison and culture run has passed.
     for path, data in pending.items():
         (ROOT / path).write_bytes(data)
     manifest["commit"] = commit
-    manifest["profiles"]["current"] = {"version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-10-22", "source_commit": commit}
+    manifest["profiles"]["current"] = {"version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-11-01", "source_commit": commit}
     notice = ROOT / manifest["notice_file"]
     text = notice.read_text()
     import re
@@ -92,12 +100,14 @@ def main():
             attestation[key] = artifact(attestation[key]["path"])
     supporting = [
         "tools/upstream-oracle/Oracle.csproj", "tools/upstream-oracle/Program.cs",
-        "tools/upstream-oracle/Compatibility.cs", "tools/upstream-oracle/generate/Generate.csproj",
+        "tools/upstream-oracle/Compatibility.cs", "tools/upstream-oracle/Caching.cs", "tools/upstream-oracle/generate/Generate.csproj",
         "tools/upstream-oracle/generate/Program.cs", "tools/upstream-oracle/refresh.py",
         "tools/upstream-parity-native/main.go", "kustolang/engine/testdata/upstream_328e05d_compatibility.json",
+        f"kustolang/engine/testdata/upstream_{commit[:7]}_compatibility.json",
+        f"kustolang/engine/testdata/upstream_{commit[:7]}_caching.json",
     ]
     manifest["differential_parity_attestations"][0]["supporting_artifacts"] = [artifact(path) for path in supporting]
-    note = "The 328e05d repin upgrades to 13.0.0: invariant literal parsing and completion examples, ordinal Unicode equality and ordering, case-insensitive wildcard middle segments, supplementary-scalar scanners, and bounded TextSource matching. Both existing corpora (258 queries and 231 commands) were independently replayed against a source build at 328e05d and the Go port; canonical outputs are unchanged. The compatibility fixture records 19 comparison cases, 13 wildcard cases, 31 literal values, 19 scanner cases, 6 source-boundary cases, 8 completion value examples, and completion ordering, verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. Supporting artifact hashes bind the fixture and reproducible source/native oracle tools to this attestation."
+    note = "The 82267c7 repin follows the 2026-11-01 13.0.0 source synchronization. SourceCache factory calls drop from two to one per miss; QueryGrammar.From now publishes one lazy process-wide instance per combination of the three boolean parse options, independent of globals/cache/schema and parser kind. Go KustoCache already called its factory once and retains its stronger serialized concurrency behavior. The 2026-10-27 ed2732f solution-file migration changes no Go runtime behavior. Both existing corpora (258 queries and 231 commands) were rerun against a source build at 82267c7 and match the Go port exactly; canonical outputs are unchanged. Fresh compatibility and cache/grammar fixtures at 82267c7 were verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. The historical 328e05d compatibility fixture is retained and still replayed by native tests."
     if note not in manifest["notes"]:
         manifest["notes"] += " " + note
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")

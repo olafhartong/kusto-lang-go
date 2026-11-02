@@ -8,12 +8,20 @@ runtime is used by the library or binary.
 ## Current upstream update
 
 The current pin is Microsoft Kusto.Language 13.0.0 at
-`328e05d10d6c73654e416675fc75af7ed0e05ffd` (2026-10-22).
+`82267c7628e70898cd8bec54c20fc4e61c0a523a` (2026-11-01); Microsoft's
+version number remains 13.0.0. This synchronization removes duplicate cache
+factory calls and publishes eight shared query grammars, one per combination
+of the three boolean parse options. Source-oracle cache regressions cover miss,
+hit, and retry behavior, option switching, and reuse across globals and parser
+kinds; native tests also exercise concurrent grammar publication.
 The [upstream changelog](../UPSTREAM_CHANGELOG.md) records affected areas,
 functions, observed behavior, and earlier source updates. The
 [development source oracle](../tools/upstream-oracle/README.md) rebuilds the
 unmodified pinned C# source and independently replays both attested corpora.
-All 489 existing cases still match exactly. The additional 13.0.0 fixture
+All 489 existing cases still match exactly after replay against the current
+source revision. The current cache and 13.0.0 compatibility fixtures are bound
+to that revision; the historical 2026-10-22 fixture remains checked in and is
+also replayed. The additional 13.0.0 fixture
 covers ordinal Unicode comparison, wildcard middle segments, UTF-16 and byte
 scanners, bounded text sources, literal values, completion ordering, and
 invariant completion examples. Its source output is identical under en-US,

@@ -11,7 +11,12 @@ if (args.Length > 2)
 }
 if (args[0] == "--compatibility")
 {
-    File.WriteAllText(args[1], JsonSerializer.Serialize(Compatibility.Build(), new JsonSerializerOptions { WriteIndented = true }));
+    File.WriteAllText(args[1], JsonSerializer.Serialize(Compatibility.Build(args[3]), new JsonSerializerOptions { WriteIndented = true }));
+    return;
+}
+if (args[0] == "--caching")
+{
+    File.WriteAllText(args[1], JsonSerializer.Serialize(Caching.Build(args[3]), new JsonSerializerOptions { WriteIndented = true }));
     return;
 }
 var queries = JsonSerializer.Deserialize<string[]>(File.ReadAllText(args[0]));

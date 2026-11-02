@@ -1,7 +1,7 @@
 # Development source oracle
 
 This tool compiles the reviewed Microsoft Kusto.Language 13.0.0 source at
-`328e05d10d6c73654e416675fc75af7ed0e05ffd`. It is used only to produce parity
+`82267c7628e70898cd8bec54c20fc4e61c0a523a`. It is used only to produce parity
 evidence. The Go library does not load .NET or ship the source oracle.
 
 Requirements: .NET SDK 10, Go, Python 3, and a clean checkout of the exact
@@ -22,7 +22,7 @@ rejects a pin update that omits it.
 
 ```sh
 git clone https://github.com/microsoft/Kusto-Query-Language /tmp/kusto-source
-git -C /tmp/kusto-source checkout 328e05d10d6c73654e416675fc75af7ed0e05ffd
+git -C /tmp/kusto-source checkout 82267c7628e70898cd8bec54c20fc4e61c0a523a
 python3 tools/upstream-oracle/refresh.py /tmp/kusto-source
 ```
 
@@ -31,7 +31,9 @@ oracle and `tools/upstream-parity-native`. It compares complete ordered
 diagnostics, sorted columns, open-table state, and result type before writing
 canonical outputs. It also records API-level Unicode, scanner, literal,
 completion, and boundary cases under five cultures, requiring identical
-results. Only after all comparisons pass does it refresh the source pin,
+results. The cache/grammar fixture additionally records source and global cache
+factory calls, retries, and all eight shared grammar variants. Revision-specific
+fixture filenames preserve historical evidence instead of overwriting it. Only after all comparisons pass does it refresh the source pin,
 notice hash, result hashes, fixture, and supporting tool hashes in `UPSTREAM.json`.
 
 The compatibility fixture uses .NET 10's ICU casing. Microsoft documents a

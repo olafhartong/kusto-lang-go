@@ -1,22 +1,22 @@
 {
   "name": "Microsoft Kusto Query Language",
   "repository": "https://github.com/microsoft/Kusto-Query-Language",
-  "commit": "328e05d10d6c73654e416675fc75af7ed0e05ffd",
+  "commit": "82267c7628e70898cd8bec54c20fc4e61c0a523a",
   "license": "Apache-2.0",
   "license_file": "third_party/kusto/LICENSE",
   "license_sha256": "e93c330dde94b38e3f0289376bfa7f25c402a13cc723e493b15622dcc3391c70",
   "notice_file": "THIRD_PARTY_NOTICES.md",
-  "notice_sha256": "1333cf05145829e27c4b4f13199f63d98d1caab65e6294c9d20d89469afc9467",
+  "notice_sha256": "670538c24d711b84b0f85460d08efcc92357535bd962438ee3cb75a6d7c2f3e0",
   "profiles": {
     "current": {
-      "version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-10-22",
-      "source_commit": "328e05d10d6c73654e416675fc75af7ed0e05ffd"
+      "version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-11-01",
+      "source_commit": "82267c7628e70898cd8bec54c20fc4e61c0a523a"
     }
   },
   "differential_parity_attestations": [
     {
       "name": "current-query-structural-v7",
-      "commit": "328e05d10d6c73654e416675fc75af7ed0e05ffd",
+      "commit": "82267c7628e70898cd8bec54c20fc4e61c0a523a",
       "query_count": 258,
       "corpus": {
         "path": "parity-artifacts/kql-v7-corpus-final.json",
@@ -37,15 +37,19 @@
       "supporting_artifacts": [
         {
           "path": "tools/upstream-oracle/Oracle.csproj",
-          "sha256": "1284487ceaa6bbe487e5b57ba14389dc0873967e23e517f44762bb6067f27b14"
+          "sha256": "4105982aa51d6d2a857a8d9d0c41f0de2e0e2a93e9950d3bf497fc431f3a4009"
         },
         {
           "path": "tools/upstream-oracle/Program.cs",
-          "sha256": "976c2ad2e4646f39c95a1ac88c828e17f8a7ba008cb8bfc45ef10af133a04aef"
+          "sha256": "1e5a83f2426f458e547ed2ccab9aa7019ecba29f6a43e76a2723a2418e4483f4"
         },
         {
           "path": "tools/upstream-oracle/Compatibility.cs",
-          "sha256": "9790c68bf085974d317ac7139755fc49944b4d7be8c5e1faa24c3ab0b6a0b951"
+          "sha256": "2760aa99e843b272d63285cb45c528bd0d749e0cc57e24609068c41ec4e9b444"
+        },
+        {
+          "path": "tools/upstream-oracle/Caching.cs",
+          "sha256": "16927e13ee3a774b92fff32ed0e4246b838f34945d538b964c0225f6358ca69d"
         },
         {
           "path": "tools/upstream-oracle/generate/Generate.csproj",
@@ -57,7 +61,7 @@
         },
         {
           "path": "tools/upstream-oracle/refresh.py",
-          "sha256": "db8e5de36cd6c9c6ab793a81183a25e998fef1da69b21531de3467efe3ea9d27"
+          "sha256": "ae918e6d9652bb02c6642148ed29ed6a55510e011e88d09d9aa62ad3e982ebf8"
         },
         {
           "path": "tools/upstream-parity-native/main.go",
@@ -66,12 +70,20 @@
         {
           "path": "kustolang/engine/testdata/upstream_328e05d_compatibility.json",
           "sha256": "9b124b5d70e617d17cbd3ebc087776b53c41a7006faa2d546b6c689d5c9e3882"
+        },
+        {
+          "path": "kustolang/engine/testdata/upstream_82267c7_compatibility.json",
+          "sha256": "a1b96d6c3fe57c5da7943be5f26ac9bdc8accccd044fd7ebe120f81b539d5010"
+        },
+        {
+          "path": "kustolang/engine/testdata/upstream_82267c7_caching.json",
+          "sha256": "77d6b6bbc360f17a703b429b39ebfd0cc1ff845b3bfd2284ea07b80b824d1c4f"
         }
       ]
     },
     {
       "name": "current-command-structural-v8",
-      "commit": "328e05d10d6c73654e416675fc75af7ed0e05ffd",
+      "commit": "82267c7628e70898cd8bec54c20fc4e61c0a523a",
       "query_count": 231,
       "corpus": {
         "path": "parity-artifacts/kql-command-corpus-v8.json",
@@ -102,5 +114,5 @@
       "sha256": "9ac212ea5eccd1cb4062113736fdda5749928ceeb0e2e254d55829aeac031fa2"
     }
   },
-  "notes": "Go files derived from Kusto.Language must retain their upstream notice and Apache-2.0 attribution. Intentionally not ported: internal .NET memory-layout struct CacheLineSeparated<T> in src/Kusto.Language/Utils/Interlocked.cs (no public surface). Intentional extension beyond upstream: the diffpatterns_text evaluate plug-in (a Kusto service plug-in that upstream Kusto.Language does not model). Catalog inventories are pinned by kustolang/engine/testdata/catalog_attestation.golden. The e3d07b0 repin changes only ShowTablesDetails and ShowTableDetails result schemas plus the ShowCapacity resource grammar; the existing differential corpora do not exercise those commands, so their canonical artifacts are unchanged and dedicated regressions cover the new behavior. The 9d09d29 repin adds ShowDatabasePolicyRowId, AlterDatabasePolicyRowId, and DeleteDatabasePolicyRowId. The existing query and function-management command parity corpora do not exercise rowid policies; their canonical artifacts are unchanged and replayed by native tests. Dedicated command regressions cover the new grammar and result schemas. Upstream CI-only changes do not affect the port. The 8aa8e70 repin makes dax_request and gql_request visible and limits each to two required string arguments; optional parameter bags and options are not yet supported by the engine. Neither plug-in occurs in the attested query or function-management command corpora or their generators, so the canonical artifacts are unchanged and replayed by native tests. Dedicated regressions cover valid calls, argument-count/type diagnostics, open runtime schemas, and evaluate completion. The EngineCommandInfos.cs change in 8aa8e70 only updates a regeneration comment and requires no Go change. The 6b5c2f7 repin adds four changedatacapture table policy commands and four materialized-view-prioritization cluster policy commands, with EffectivePolicy on the show-cluster result. It adds IsCommonArgumentTypeKind and bounded computed-column literal completions for shared-type function arguments, preserving source literal syntax and compound hidden-string semantics. Both existing differential corpora (258 query cases and 231 command cases) were re-run against a source oracle built from 6b5c2f7 and match the unchanged canonical artifacts exactly. Dedicated source-oracle regressions in testdata/upstream_6b5c2f7_parity.json cover 20 valid/invalid policy commands and 14 computed-column completion cases, including the work and UTF-16 length limits. The 328e05d repin upgrades to 13.0.0: invariant literal parsing and completion examples, ordinal Unicode equality and ordering, case-insensitive wildcard middle segments, supplementary-scalar scanners, and bounded TextSource matching. Both existing corpora (258 queries and 231 commands) were independently replayed against a source build at 328e05d and the Go port; canonical outputs are unchanged. The compatibility fixture records 19 comparison cases, 13 wildcard cases, 31 literal values, 19 scanner cases, 6 source-boundary cases, 8 completion value examples, and completion ordering, verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. Supporting artifact hashes bind the fixture and reproducible source/native oracle tools to this attestation."
+  "notes": "Go files derived from Kusto.Language must retain their upstream notice and Apache-2.0 attribution. Intentionally not ported: internal .NET memory-layout struct CacheLineSeparated<T> in src/Kusto.Language/Utils/Interlocked.cs (no public surface). Intentional extension beyond upstream: the diffpatterns_text evaluate plug-in (a Kusto service plug-in that upstream Kusto.Language does not model). Catalog inventories are pinned by kustolang/engine/testdata/catalog_attestation.golden. The e3d07b0 repin changes only ShowTablesDetails and ShowTableDetails result schemas plus the ShowCapacity resource grammar; the existing differential corpora do not exercise those commands, so their canonical artifacts are unchanged and dedicated regressions cover the new behavior. The 9d09d29 repin adds ShowDatabasePolicyRowId, AlterDatabasePolicyRowId, and DeleteDatabasePolicyRowId. The existing query and function-management command parity corpora do not exercise rowid policies; their canonical artifacts are unchanged and replayed by native tests. Dedicated command regressions cover the new grammar and result schemas. Upstream CI-only changes do not affect the port. The 8aa8e70 repin makes dax_request and gql_request visible and limits each to two required string arguments; optional parameter bags and options are not yet supported by the engine. Neither plug-in occurs in the attested query or function-management command corpora or their generators, so the canonical artifacts are unchanged and replayed by native tests. Dedicated regressions cover valid calls, argument-count/type diagnostics, open runtime schemas, and evaluate completion. The EngineCommandInfos.cs change in 8aa8e70 only updates a regeneration comment and requires no Go change. The 6b5c2f7 repin adds four changedatacapture table policy commands and four materialized-view-prioritization cluster policy commands, with EffectivePolicy on the show-cluster result. It adds IsCommonArgumentTypeKind and bounded computed-column literal completions for shared-type function arguments, preserving source literal syntax and compound hidden-string semantics. Both existing differential corpora (258 query cases and 231 command cases) were re-run against a source oracle built from 6b5c2f7 and match the unchanged canonical artifacts exactly. Dedicated source-oracle regressions in testdata/upstream_6b5c2f7_parity.json cover 20 valid/invalid policy commands and 14 computed-column completion cases, including the work and UTF-16 length limits. The 328e05d repin upgrades to 13.0.0: invariant literal parsing and completion examples, ordinal Unicode equality and ordering, case-insensitive wildcard middle segments, supplementary-scalar scanners, and bounded TextSource matching. Both existing corpora (258 queries and 231 commands) were independently replayed against a source build at 328e05d and the Go port; canonical outputs are unchanged. The compatibility fixture records 19 comparison cases, 13 wildcard cases, 31 literal values, 19 scanner cases, 6 source-boundary cases, 8 completion value examples, and completion ordering, verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. Supporting artifact hashes bind the fixture and reproducible source/native oracle tools to this attestation. The 82267c7 repin follows the 2026-11-01 13.0.0 source synchronization. SourceCache factory calls drop from two to one per miss; QueryGrammar.From now publishes one lazy process-wide instance per combination of the three boolean parse options, independent of globals/cache/schema and parser kind. Go KustoCache already called its factory once and retains its stronger serialized concurrency behavior. The 2026-10-27 ed2732f solution-file migration changes no Go runtime behavior. Both existing corpora (258 queries and 231 commands) were rerun against a source build at 82267c7 and match the Go port exactly; canonical outputs are unchanged. Fresh compatibility and cache/grammar fixtures at 82267c7 were verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. The historical 328e05d compatibility fixture is retained and still replayed by native tests."
 }

@@ -5,6 +5,9 @@ import (
 	"sync"
 )
 
+// Ported from src/Kusto.Language/Parser/QueryGrammar.cs.
+// See third_party/kusto/LICENSE for the preserved Apache-2.0 license.
+
 // QueryGrammar exposes the stable public parser objects used by query and
 // command grammars. This first native slice covers the upstream name and
 // wildcard rules; the remaining query rules continue to use QueryParser.
@@ -118,39 +121,36 @@ type QueryGrammar struct {
 	scanSimpleName                  Parser[LexicalToken]
 }
 
-type cachedQueryGrammar struct {
+// Like upstream's Lazy<QueryGrammar>[8], each boolean option combination is
+// published once without retaining a GlobalState or its schema/cache.
+var queryGrammars [8]struct {
+	once    sync.Once
 	grammar *QueryGrammar
-	options ParseOptions
-}
-
-var recentQueryGrammar struct {
-	sync.Mutex
-	value *cachedQueryGrammar
 }
 
 func QueryGrammarFrom(globals *GlobalState) *QueryGrammar {
 	if globals == nil {
 		globals = DefaultGlobalState
 	}
-
-	recentQueryGrammar.Lock()
-	defer recentQueryGrammar.Unlock()
-	if recent := recentQueryGrammar.value; recent != nil && recent.options.EqualExceptForParseKind(globals.ParseOptions) {
-		return recent.grammar
+	options := globals.ParseOptions
+	index := 0
+	if options.AlwaysProduceEndToken {
+		index |= 1
 	}
-
-	var cached *cachedQueryGrammar
-	if globals.Cache != nil {
-		cached, _ = KustoCacheTryGetValue[*cachedQueryGrammar](globals.Cache)
+	if options.AllowLiteralsWithLineBreaks {
+		index |= 2
 	}
-	if cached == nil || !cached.options.EqualExceptForParseKind(globals.ParseOptions) {
-		cached = &cachedQueryGrammar{grammar: newQueryGrammar(globals.ParseOptions), options: globals.ParseOptions}
-		if globals.Cache != nil {
-			cached = KustoCacheGetOrCreate(globals.Cache, func() *cachedQueryGrammar { return cached })
-		}
+	if options.AllowNonAdjacentWildcardParts {
+		index |= 4
 	}
-	recentQueryGrammar.value = cached
-	return cached.grammar
+	slot := &queryGrammars[index]
+	slot.once.Do(func() {
+		slot.grammar = newQueryGrammar(DefaultParseOptions.
+			WithAlwaysProduceEndTokens(index&1 != 0).
+			WithAllowLiteralsWithLineBreaks(index&2 != 0).
+			WithAllowNonAdjacentWildcardParts(index&4 != 0))
+	})
+	return slot.grammar
 }
 
 func newQueryGrammar(options ParseOptions) *QueryGrammar {

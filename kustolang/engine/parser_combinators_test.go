@@ -48,15 +48,15 @@ func TestSourceCacheCreatesStoresAndRetrievesTypedValues(t *testing.T) {
 	}
 }
 
-func TestSourceCacheFactoryMirrorsUpstreamDoubleInvocationOnMiss(t *testing.T) {
+func TestSourceCacheFactoryRunsOnceOnMiss(t *testing.T) {
 	cache := NewSourceCache()
 	calls := 0
 	first := SourceCacheGetOrCreateFunc(cache, func() *parserCombinatorCacheValue {
 		calls++
 		return &parserCombinatorCacheValue{Name: "value"}
 	})
-	if calls != 2 {
-		t.Fatalf("factory calls = %d, want 2", calls)
+	if calls != 1 {
+		t.Fatalf("factory calls = %d, want 1", calls)
 	}
 	if first == nil || first.Name != "value" {
 		t.Fatalf("factory value = %#v", first)

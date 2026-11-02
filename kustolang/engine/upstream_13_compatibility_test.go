@@ -13,6 +13,12 @@ import (
 )
 
 func TestUpstream13SourceOracleCompatibility(t *testing.T) {
+	for _, commit := range []string{"328e05d10d6c73654e416675fc75af7ed0e05ffd", nov01Commit} {
+		t.Run(commit[:7], func(t *testing.T) { testUpstream13SourceOracleCompatibility(t, commit) })
+	}
+}
+
+func testUpstream13SourceOracleCompatibility(t *testing.T, commit string) {
 	var fixture struct {
 		CompletionOrder []string
 		ValueExamples   []struct {
@@ -40,14 +46,14 @@ func TestUpstream13SourceOracleCompatibility(t *testing.T) {
 			Sensitive, Insensitive bool
 		}
 	}
-	data, err := os.ReadFile("testdata/upstream_328e05d_compatibility.json")
+	data, err := os.ReadFile(fmt.Sprintf("testdata/upstream_%s_compatibility.json", commit[:7]))
 	if err != nil {
 		t.Fatal(err)
 	}
 	if err := json.Unmarshal(data, &fixture); err != nil {
 		t.Fatal(err)
 	}
-	if fixture.Commit != "328e05d10d6c73654e416675fc75af7ed0e05ffd" || len(fixture.Comparisons) != 19 || len(fixture.Wildcards) != 13 || len(fixture.Literals) != 31 || len(fixture.Scanners) != 19 || len(fixture.TextSources) != 6 {
+	if fixture.Commit != commit || len(fixture.Comparisons) != 19 || len(fixture.Wildcards) != 13 || len(fixture.Literals) != 31 || len(fixture.Scanners) != 19 || len(fixture.TextSources) != 6 {
 		t.Fatal("incomplete or incorrectly pinned source oracle fixture")
 	}
 	examples := []any{"Iİ", time.Date(2026, 10, 22, 13, 14, 15, 0, time.UTC), TimeSpanValue(937840050001), TimeSpanValue(-1), big.NewRat(5, 4), [16]byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}, 1234.5, true}

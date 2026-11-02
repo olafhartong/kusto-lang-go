@@ -11,7 +11,7 @@ using Kusto.Language.Utils;
 
 static class Compatibility
 {
-    public static object Build()
+    public static object Build(string commit)
     {
         var pairs = new[] {
             ("I", "i"), ("ı", "I"), ("ſ", "S"), ("K", "K"), ("ß", "ẞ"),
@@ -53,7 +53,7 @@ static class Compatibility
                 .OrderBy(x => CultureUtilities.ToLowerInvariant(x), CultureStringComparer.Ordinal).ToArray(),
             valueExamples = examples.Select((v, i) => new { index = i,
                 text = (string)exampleMethod.Invoke(null, new[] { (object)new Parameter("p", ScalarTypes.String), v }) }).ToArray(),
-            commit = "328e05d10d6c73654e416675fc75af7ed0e05ffd",
+            commit,
             comparisons = pairs.Select(p => new {
                 left = p.Item1, right = p.Item2,
                 equal = CultureUtilities.Equals(p.Item1, p.Item2, true),

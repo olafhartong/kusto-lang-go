@@ -124,9 +124,6 @@ func SourceCacheGetOrCreateFunc[T any](cache *SourceCache, creator func() T) T {
 		return value.(T)
 	}
 
-	// The upstream source invokes the factory twice on a miss and stores the
-	// second value. Preserve that observable behavior for parity.
-	_ = creator()
 	value := creator()
 	cache.values[key] = value
 	return value

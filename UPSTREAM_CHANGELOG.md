@@ -15,6 +15,34 @@ These requirements also apply to future coding agents through
 [`AGENTS.md`](AGENTS.md). Local and CI provenance checks require a populated
 table in the entry linking to the currently pinned revision.
 
+## 2026-11-01 — 13.0.0 source synchronization: cache factories and grammar reuse
+
+Source: [`82267c7`](https://github.com/microsoft/Kusto-Query-Language/commit/82267c7628e70898cd8bec54c20fc4e61c0a523a).
+Microsoft's source version remains **13.0.0**.
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Parser-source cache | `SourceCache.GetOrCreate<T>(Func<T>)`; Go `SourceCacheGetOrCreateFunc` | A factory now runs once on a cache miss, rather than twice with the first result discarded. A hit reuses the stored object without another factory call. A throwing factory leaves no entry, so a later call can retry. |
+| Global-state cache | `KustoCache.GetOrCreate<T>(Func<T>)`; Go `KustoCacheGetOrCreate` | Removes the unused preliminary factory call in C#. Sequential misses now call the factory once and hits reuse the stored object. Go already provided this behavior, so no runtime change is needed here. Go retains its stronger serialized factory execution under concurrency. |
+| Query grammar caching | `QueryGrammar.From`, `CreateGrammar`, `CreateGrammars`; Go `QueryGrammarFrom` | Replaces the most-recent grammar plus per-global cache with eight lazy process-wide instances, keyed by `AlwaysProduceEndToken`, `AllowLiteralsWithLineBreaks`, and `AllowNonAdjacentWildcardParts`. Switching options away and back now reuses the same grammar even without a global cache; different schemas, cache settings, and parser kinds share the corresponding instance. Go publishes each variant with `sync.Once` and no longer stores a grammar in a schema's `KustoCache`. |
+
+The [cache/grammar source-oracle fixture](kustolang/engine/testdata/upstream_82267c7_caching.json)
+and [native regressions](kustolang/engine/upstream_nov01_cache_test.go) cover
+factory invocation counts, retry, all eight variants, reuse, and concurrent
+publication. The [current compatibility fixture](kustolang/engine/testdata/upstream_82267c7_compatibility.json)
+reruns the 13.0.0 string, literal, scanner, and completion cases. Both oracle
+fixtures agree under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. Both existing query
+and command corpora (489 cases total) were replayed against this exact source
+revision and the Go port; their canonical outputs are unchanged.
+
+## 2026-10-27 — Visual Studio solution format
+
+Source: [`ed2732f`](https://github.com/microsoft/Kusto-Query-Language/commit/ed2732f869244b584be4d6d8d38a70dcc2074524).
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Build tooling | `src/Kusto.Language.sln`, `src/Kusto.Language.slnx` | Source update: replaces the legacy Visual Studio solution with an XML solution listing the language and Bridge projects. No language functions or Go runtime behavior change. The source-oracle tool builds its own project and needs no solution-format adaptation. |
+
 ## 2026-10-22 — 13.0.0
 
 Source: [`328e05d`](https://github.com/microsoft/Kusto-Query-Language/commit/328e05d10d6c73654e416675fc75af7ed0e05ffd),
