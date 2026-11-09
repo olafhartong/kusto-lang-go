@@ -228,7 +228,7 @@ func (s *KustoCodeService) tryGetBoundCode(cancellationToken CancellationToken, 
 	}
 	if state.recovered != nil {
 		if kustoCodeServiceIsCancellationPanic(state.recovered) {
-			return nil, false
+			panic(state.recovered)
 		}
 		s.codeFailureState.Store(state)
 		return nil, false
@@ -313,9 +313,7 @@ func (s *KustoCodeService) getDiagnosticsBytes(waitForAnalysis bool, cancellatio
 	}
 
 	code, hasCode := s.tryGetBoundCode(cancellationToken, waitForAnalysis)
-	if cancellationToken.Err() != nil {
-		return EmptyReadOnlyList[Diagnostic]()
-	}
+	cancellationToken.ThrowIfCancellationRequested()
 	s.diagnosticsInitMu.Lock()
 	defer s.diagnosticsInitMu.Unlock()
 	if state := s.diagnosticsState.Load(); state != nil {
@@ -337,7 +335,7 @@ func (s *KustoCodeService) getDiagnosticsBytes(waitForAnalysis bool, cancellatio
 		}()
 		if recovered != nil {
 			if kustoCodeServiceIsCancellationPanic(recovered) {
-				return EmptyReadOnlyList[Diagnostic]()
+				panic(recovered)
 			}
 			diagnostics = []Diagnostic{DiagnosticInternalFailure()}
 		}
@@ -432,6 +430,9 @@ func kustoCodeServiceAnalyze(analyzer KustoAnalyzer, code *KustoCode, diagnostic
 	result = diagnostics
 	defer func() {
 		if recovered := recover(); recovered != nil {
+			if kustoCodeServiceIsCancellationPanic(recovered) {
+				panic(recovered)
+			}
 			result = append(result, DiagnosticAnalyzerFailure(analyzer.Name(), fmt.Sprint(recovered)))
 		}
 	}()

@@ -459,7 +459,7 @@ func (p *queryParserState) parseKnownCommand() Command {
 			bestEnd = p.pos
 		}
 	}
-	if grammar.allowPartialKnownCommand {
+	if grammar.allowPartialKnownCommand && !(best != nil && (bestEnd >= len(p.tokens) || p.tokens[bestEnd].Kind == SyntaxKindEndOfTextToken)) {
 		p.pos = start
 		partial := p.parsePartialKnownCommand(grammar.commandParsers)
 		partialEnd := p.pos

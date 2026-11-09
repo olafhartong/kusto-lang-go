@@ -1,7 +1,6 @@
 package kustolang
 
 import (
-	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -177,19 +176,24 @@ func TestKustoCodeServiceCanceledAnalyzerInitializationCanRetry(t *testing.T) {
 	}
 }
 
-func TestKustoCodeServiceAnalyzerCancellationPanicBecomesFailureDiagnostic(t *testing.T) {
+func TestKustoCodeServiceAnalyzerCancellationPropagatesAndCanRetry(t *testing.T) {
+	var calls atomic.Int32
 	analyzer := NewKustoAnalyzer(KustoAnalyzerCallbacks{
 		Name: "canceling analyzer",
-		Analyze: func(*KustoCode, []Diagnostic, CancellationToken) []Diagnostic {
-			panic(OperationCanceledError{})
+		Analyze: func(_ *KustoCode, diagnostics []Diagnostic, _ CancellationToken) []Diagnostic {
+			if calls.Add(1) == 1 {
+				panic(OperationCanceledError{})
+			}
+			return append(diagnostics, NewDiagnostic("KS902", "completed"))
 		},
 	})
 	service := NewKustoCodeServiceForCode(ParseAndAnalyze("print value=1")).WithAnalyzers([]KustoAnalyzer{analyzer})
-	diagnostics := service.GetAnalyzerDiagnostics(true, CancellationToken{})
-	if len(diagnostics) != 1 || diagnostics[0].Code != "KS203" ||
-		!strings.Contains(diagnostics[0].Message, "canceling analyzer") ||
-		!strings.Contains(diagnostics[0].Message, "operation canceled") {
-		t.Fatalf("analyzer cancellation diagnostics = %#v", diagnostics)
+	assertOperationCanceled(t, func() { service.GetAnalyzerDiagnostics(true, CancellationToken{}) })
+	if _, cached := service.TryGetCachedAnalyzerDiagnostics(); cached {
+		t.Fatal("cancellation cached analyzer diagnostics")
+	}
+	if diagnostics := service.GetAnalyzerDiagnostics(true, CancellationToken{}); len(diagnostics) != 1 || diagnostics[0].Code != "KS902" {
+		t.Fatalf("retry diagnostics = %#v", diagnostics)
 	}
 }
 

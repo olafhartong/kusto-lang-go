@@ -24,6 +24,7 @@ func TestKustoAnalyzersCatalogAllOrderAndInstances(t *testing.T) {
 		{KustoAnalyzers.AvoidUsingHasWithIPv4Strings, "AvoidUsingHasWithIPv4StringsAnalyzer", KustoAnalyzerCodeAvoidUsingHasWithIPv4Strings},
 		{KustoAnalyzers.PreferUsingOptimizedAlternative, "PreferUsingOptimizedAlternative", KustoAnalyzerCodePreferUsingOptimizedAlternative},
 		{KustoAnalyzers.AvoidStrlenWithDynamic, "AvoidStrlenWithDynamicAnalyzer", KustoAnalyzerCodeAvoidStrlenWithDynamic},
+		{KustoAnalyzers.DateTimeLiteral, "DateTimeLiteralAnalyzer", KustoAnalyzerCodeInvalidDateTimeLiteral},
 	}
 	if len(all) != len(want) {
 		t.Fatalf("analyzer count = %d, want %d", len(all), len(want))

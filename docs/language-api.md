@@ -130,7 +130,7 @@ built-in operator symbols and signature ordering used by semantic binding;
 evaluate plug-in catalogs, and `Functions` exposes all 429 built-in function
 symbols from the pinned revision. All catalog list methods return defensive
 copies and reference the same symbols used by the binder. The public command
-catalogs likewise expose all 637 engine commands plus the pinned server-specific
+catalogs likewise expose all 645 engine commands plus the pinned server-specific
 catalogs, including result schemas and grammar constructions. Concrete
 `EngineCommandGrammar`, `DataManagerCommandGrammar`,
 `ClusterManagerCommandGrammar`, and `AriaBridgeCommandGrammar` types preserve

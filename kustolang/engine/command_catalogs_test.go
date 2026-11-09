@@ -28,7 +28,7 @@ func TestGeneratedSmallCommandCatalogsExposeShowVersion(t *testing.T) {
 }
 
 func TestGeneratedEngineCommandCatalogExposesUpstreamSymbols(t *testing.T) {
-	if EngineCommands == nil || len(EngineCommands.All) != 637 {
+	if EngineCommands == nil || len(EngineCommands.All) != 645 {
 		t.Fatalf("engine command catalog size = %#v/%d", EngineCommands, len(EngineCommands.All))
 	}
 	if EngineCommands.ShowExternalTablePolicyRowLevelSecurity == nil || EngineCommands.AlterExternalTablePolicyRowLevelSecurity == nil {

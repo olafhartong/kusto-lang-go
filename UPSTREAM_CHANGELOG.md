@@ -15,6 +15,54 @@ These requirements also apply to future coding agents through
 [`AGENTS.md`](AGENTS.md). Local and CI provenance checks require a populated
 table in the entry linking to the currently pinned revision.
 
+## 2026-11-08 — graph-model policy commands
+
+Source: [`dbd7ca7`](https://github.com/microsoft/Kusto-Query-Language/commit/dbd7ca7684adfd7a38536f74728670dc54a67acc).
+Microsoft's source version remains **13.0.0**. This is a source synchronization,
+not a new NuGet or Go package release.
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Graph-model policies | `ShowGraphModelPolicySnapshotIndexing`, `ShowGraphModelStarPolicySnapshotIndexing`, `AlterGraphModelPolicySnapshotIndexing`, `DeleteGraphModelPolicySnapshotIndexing`, and the four corresponding `GraphQuery` commands; Go `EngineCommands` and public `EngineCommandCatalog` | Adds eight commands for `snapshot_indexing` and `graph_query`. For example, `.show graph_model * policy snapshot_indexing` and `.alter graph_model M policy graph_query '{}'` now parse with the five policy-result string columns. Missing or non-string policy values retain syntax diagnostics. Command completion includes both policies. Unknown graph-model name references now use upstream's generic `KS142`; `graph()` lookup keeps its separate graph-model diagnostic. |
+
+The [November source-oracle fixture](kustolang/engine/testdata/upstream_dbd7ca7_behavior.json)
+and [native regressions](kustolang/engine/upstream_nov08_test.go) compare 18 valid
+and malformed policy commands, result schemas, diagnostics, datetime cases,
+and grammar behavior. The two existing corpora (258 queries and 231 commands)
+are independently replayed against this exact revision. Historical source
+fixtures remain available. Provenance records the current source revision and
+hashes of the comparison tools and evidence.
+
+## 2026-11-03 — timespan parsing allocation changes
+
+Source: [`7e658f7`](https://github.com/microsoft/Kusto-Query-Language/commit/7e658f73457320fea8fde24c5f1b5a7e2a87ca59).
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Literal parsing | `SyntaxToken.GetTimeSpanValue`, `CultureUtilities.TryParseDoubleInvariant(ReadOnlySpan<char>, out double)` | Source update: modern .NET builds parse number and unit spans without allocating substrings. The Go implementation already slices strings without copying. Numeric parsing and unit behavior are preserved; existing source-oracle literal cases, including rejection of group separators, are replayed under five cultures. No Go runtime change is required for this optimization. |
+
+## 2026-11-03 — cancellation, keyword calls, and command recovery
+
+Source: [`95874ea`](https://github.com/microsoft/Kusto-Query-Language/commit/95874ea5fcd625c391fe62838c60b2aebbf2312b).
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Code-service cancellation | `KustoCodeService.TryGetBoundCode`, `GetDiagnostics`, `GetAnalyzerDiagnostics`; Go counterparts | Cancellation propagates as `OperationCanceledError` instead of an empty result or a cached `KS203` analyzer failure. Retrying the same service with a live token produces its diagnostics. Regressions cover binding, diagnostic traversal, analyzer cancellation, concurrent live callers, and absence of cached failure state. |
+| Computed function expansion | `Binder.GetFunctionCallExpansion`, `GetDeferredFunctionCallExpansion`, `TryBindCalledFunctionBody`; Go `deferredComputedFunctionExpansion` | A deferred expansion no longer inherits an already-canceled originating bind. Cached `Rows("T")` results can still expand their body after the original token is canceled. Go already avoids storing canceled synchronous expansions; that behavior is retained. Explicit tokens on `TryBindCalledFunctionBody` were already supported. |
+| Parse entry point | `KustoCode.ParseAndAnalyze`; Go `ParseAndAnalyzeWithCancellation` | Upstream now forwards the supplied token to creation/binding. Go already forwards it; existing cancellation regressions remain applicable. No Go runtime change is required here. |
+| Query grammar | `QueryGrammar.ScanFunctionCall`, `HasAnyExpression`, `HasAllExpression` | Keyword identifiers such as `partition` and `render` now work as user-function call names in the grammar parser. `typeof` and `inline_external_table` keep their dedicated parsing paths. The source oracle also confirms the new `(` completion after keyword identifiers and the changed `fork (count)` / malformed `__partitionby` prefix boundaries; existing expectations now follow those results. Go already emits the correct `HasAnyExpression`/`HasAllExpression` node kinds; dedicated regressions retain this behavior. |
+| Command recovery | `CommandGrammar.bestCommandOrPartial`; Go `parseKnownCommand` | A complete command at end of input skips the expensive partial-parser search. Incomplete commands still use recovery. The existing query/command differential corpora validate retained parsing and diagnostics. |
+| Source generation | `CodeGenerator.WriteLine(string, bool, bool)` | Source update: adds an unindented output option using `WriteLineNoTabs`. The development oracle builds with the updated generator; the Go runtime has no corresponding text-writer API to change. |
+
+## 2026-11-02 — datetime literal interpretation warnings
+
+Source: [`ebca795`](https://github.com/microsoft/Kusto-Query-Language/commit/ebca7954208c09443825d104aa8ea343a4f6270c).
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Datetime analysis | `DateTimeLiteralAnalyzer`, `KustoDateTimeParser.Parse`, `KustoAnalyzerCodes`; Go `NewDateTimeLiteralAnalyzer` and internal `parseKustoDateTime` | Adds correctness warnings `KS517` for unreadable literals and `KS518` for ambiguous numeric literals. `datetime(2026)` warns that it means the year 2026; `datetime(0)` warns that it means seconds from 1970; large tick counts include their exact seven-digit fraction in the message. Explicit dates remain warning-free. The source-oracle cases cover numeric boundaries, fixed-width forms, UTC offsets, fraction rounding, null/now, invalid dates, named months, accepted yearless/time-only shorthand (without false invalid warnings), and UTF-16 locations after an emoji. |
+| Literal token values | `SyntaxToken.GetDateTimeValue`; Go `dateTimeLiteralValue` | The new service-literal parser is used by the analyzer, not by token-value conversion. The existing invariant token parser remains unchanged, matching upstream's separation of these APIs. |
+
 ## 2026-11-01 — 13.0.0 source synchronization: cache factories and grammar reuse
 
 Source: [`82267c7`](https://github.com/microsoft/Kusto-Query-Language/commit/82267c7628e70898cd8bec54c20fc4e61c0a523a).

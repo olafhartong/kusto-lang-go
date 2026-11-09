@@ -119,6 +119,8 @@ const (
 	KustoAnalyzerCodeAvoidUsingHasWithIPv4Strings         = internal.KustoAnalyzerCodeAvoidUsingHasWithIPv4Strings
 	KustoAnalyzerCodePreferUsingOptimizedAlternative      = internal.KustoAnalyzerCodePreferUsingOptimizedAlternative
 	KustoAnalyzerCodeAvoidStrlenWithDynamic               = internal.KustoAnalyzerCodeAvoidStrlenWithDynamic
+	KustoAnalyzerCodeInvalidDateTimeLiteral               = internal.KustoAnalyzerCodeInvalidDateTimeLiteral
+	KustoAnalyzerCodeAmbiguousNumericDateTimeLiteral      = internal.KustoAnalyzerCodeAmbiguousNumericDateTimeLiteral
 
 	BrackettingStyleDefault  = internal.BrackettingStyleDefault
 	BrackettingStyleNone     = internal.BrackettingStyleNone

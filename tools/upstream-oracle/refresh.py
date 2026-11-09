@@ -29,8 +29,8 @@ def main():
         raise SystemExit("usage: python3 tools/upstream-oracle/refresh.py /path/to/Kusto-Query-Language")
     source = Path(sys.argv[1]).resolve()
     commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
-    if commit != "82267c7628e70898cd8bec54c20fc4e61c0a523a":
-        raise SystemExit("Expected the reviewed 13.0.0 revision 82267c7; refusing to attest another source.")
+    if commit != "dbd7ca7684adfd7a38536f74728670dc54a67acc":
+        raise SystemExit("Expected the reviewed 13.0.0 revision dbd7ca7; refusing to attest another source.")
     run("git", "-C", str(source), "diff", "--exit-code", "HEAD")
     manifest_path = ROOT / "third_party/kusto/UPSTREAM.json"
     manifest = json.loads(manifest_path.read_text())
@@ -68,6 +68,7 @@ def main():
             print(f"Matched {len(expected)} cases: {attestation['name']}", flush=True)
         compatibility = None
         caching = None
+        november = None
         for culture in CULTURES:
             output = temp / "compatibility.json"
             run("dotnet", str(oracle), "--compatibility", str(output), culture, commit)
@@ -80,6 +81,25 @@ def main():
             if caching is not None and current != caching:
                 raise SystemExit(f"Culture-dependent caching oracle result: {culture}")
             caching = current
+            run("dotnet", str(oracle), "--november", str(output), culture, commit)
+            current = json.loads(output.read_text())
+            if november is not None and current != november:
+                raise SystemExit(f"Culture-dependent November oracle result: {culture}")
+            november = current
+        november["verifiedCultures"] = CULTURES
+        behavior_path = f"kustolang/engine/testdata/upstream_{commit[:7]}_behavior.json"
+        behavior = ROOT / behavior_path
+        previous = behavior.read_bytes() if behavior.exists() else None
+        try:
+            behavior.write_bytes(canonical(november))
+            run("go", "test", "./kustolang/engine", "-run", "TestUpstreamNov08")
+        except BaseException:
+            if previous is None:
+                behavior.unlink(missing_ok=True)
+            else:
+                behavior.write_bytes(previous)
+            raise
+        pending[behavior_path] = canonical(november)
         compatibility["verifiedCultures"] = CULTURES
         caching["verifiedCultures"] = CULTURES
         pending[f"kustolang/engine/testdata/upstream_{commit[:7]}_compatibility.json"] = canonical(compatibility)
@@ -88,7 +108,7 @@ def main():
     for path, data in pending.items():
         (ROOT / path).write_bytes(data)
     manifest["commit"] = commit
-    manifest["profiles"]["current"] = {"version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-11-01", "source_commit": commit}
+    manifest["profiles"]["current"] = {"version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-11-08", "source_commit": commit}
     notice = ROOT / manifest["notice_file"]
     text = notice.read_text()
     import re
@@ -100,14 +120,17 @@ def main():
             attestation[key] = artifact(attestation[key]["path"])
     supporting = [
         "tools/upstream-oracle/Oracle.csproj", "tools/upstream-oracle/Program.cs",
-        "tools/upstream-oracle/Compatibility.cs", "tools/upstream-oracle/Caching.cs", "tools/upstream-oracle/generate/Generate.csproj",
+        "tools/upstream-oracle/Compatibility.cs", "tools/upstream-oracle/Caching.cs", "tools/upstream-oracle/November.cs", "tools/upstream-oracle/generate/Generate.csproj",
         "tools/upstream-oracle/generate/Program.cs", "tools/upstream-oracle/refresh.py",
         "tools/upstream-parity-native/main.go", "kustolang/engine/testdata/upstream_328e05d_compatibility.json",
+        "kustolang/engine/testdata/upstream_82267c7_compatibility.json",
+        "kustolang/engine/testdata/upstream_82267c7_caching.json",
+        f"kustolang/engine/testdata/upstream_{commit[:7]}_behavior.json",
         f"kustolang/engine/testdata/upstream_{commit[:7]}_compatibility.json",
         f"kustolang/engine/testdata/upstream_{commit[:7]}_caching.json",
     ]
     manifest["differential_parity_attestations"][0]["supporting_artifacts"] = [artifact(path) for path in supporting]
-    note = "The 82267c7 repin follows the 2026-11-01 13.0.0 source synchronization. SourceCache factory calls drop from two to one per miss; QueryGrammar.From now publishes one lazy process-wide instance per combination of the three boolean parse options, independent of globals/cache/schema and parser kind. Go KustoCache already called its factory once and retains its stronger serialized concurrency behavior. The 2026-10-27 ed2732f solution-file migration changes no Go runtime behavior. Both existing corpora (258 queries and 231 commands) were rerun against a source build at 82267c7 and match the Go port exactly; canonical outputs are unchanged. Fresh compatibility and cache/grammar fixtures at 82267c7 were verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. The historical 328e05d compatibility fixture is retained and still replayed by native tests."
+    note = "The dbd7ca7 repin covers source changes from 2026-11-02 through 2026-11-08 without a Microsoft package-version bump. Added the DateTimeLiteral analyzer (KS517 invalid literals and KS518 ambiguous numeric literals) and an internal service-literal interpretation parser; SyntaxToken.Value retains upstream's separate invariant token parser. Added eight graph_model snapshot_indexing/graph_query policy commands, command-completion metadata, and generic unknown-name diagnostics for graph-model references. Keyword-as-identifier function names are now recognized by the grammar parser. Complete commands skip partial-recovery search. Code-service binding/diagnostics/analyzers propagate cancellation without caching it; deferred computed-function expansion uses an independent token. ParseAndAnalyze and has_any/has_all AST kinds already matched and require no runtime change. The CodeGenerator unindented-output option and .NET span-based timespan parsing are upstream tooling/allocation improvements; existing Go string-slice and literal behavior is preserved. Both existing differential corpora (489 cases) were replayed from this exact source revision, plus a dedicated November datetime/analyzer/parser/command fixture under five cultures. Historical fixtures and their evidence remain checked in."
     if note not in manifest["notes"]:
         manifest["notes"] += " " + note
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")

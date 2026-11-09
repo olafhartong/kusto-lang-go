@@ -8,12 +8,12 @@ runtime is used by the library or binary.
 ## Current upstream update
 
 The current pin is Microsoft Kusto.Language 13.0.0 at
-`82267c7628e70898cd8bec54c20fc4e61c0a523a` (2026-11-01); Microsoft's
-version number remains 13.0.0. This synchronization removes duplicate cache
-factory calls and publishes eight shared query grammars, one per combination
-of the three boolean parse options. Source-oracle cache regressions cover miss,
-hit, and retry behavior, option switching, and reuse across globals and parser
-kinds; native tests also exercise concurrent grammar publication.
+`dbd7ca7684adfd7a38536f74728670dc54a67acc` (2026-11-08); Microsoft's
+version number remains 13.0.0. The November 2–8 synchronization adds datetime
+literal interpretation warnings, eight graph-model policy commands, keyword
+function-call grammar support, command-recovery pruning, and cancellation
+propagation and deferred-expansion fixes. Earlier cache-factory and shared-grammar
+changes remain covered by their historical regressions.
 The [upstream changelog](../UPSTREAM_CHANGELOG.md) records affected areas,
 functions, observed behavior, and earlier source updates. The
 [development source oracle](../tools/upstream-oracle/README.md) rebuilds the
@@ -91,7 +91,7 @@ The practical analyzer milestone covers the supported KQL workflows:
 - all 429 public built-in `Functions` symbols from the pinned handwritten and
   generated conversion catalogs, emitted by deterministic standard-library Go
   AST generation and shared directly with the binder;
-- all 637 generated engine command symbols and the pinned non-engine server
+- all 645 generated engine command symbols and the pinned non-engine server
   command catalogs, preserving result schemas, constructions, ordering, and
   the exact symbols used by command parsing;
 - table change-data-capture and cluster materialized-view prioritization policy
@@ -566,3 +566,5 @@ license hash, third-party notice, and checked-in differential artifacts without
 network access. Every attestation names the exact pinned commit and hashes its
 corpus, generator, C# oracle output, and native output. A pin change therefore
 fails local and CI provenance until a fresh differential batch is recorded.
+
+The 2026-11-02–08 synchronization adds datetime interpretation warnings (`KS517`/`KS518`), eight graph-model policy commands, keyword-named function-call scanning, command-recovery pruning, and cancellation propagation/retry fixes. See the [upstream changelog](../UPSTREAM_CHANGELOG.md) and [November source-oracle fixture](../kustolang/engine/testdata/upstream_dbd7ca7_behavior.json). Token datetime values retain the separate upstream invariant parser.

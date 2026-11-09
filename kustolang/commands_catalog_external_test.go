@@ -8,8 +8,8 @@ import (
 
 func TestPublicEngineCommandCatalogMatchesPinnedUpstream(t *testing.T) {
 	all := kustolang.EngineCommands.All()
-	if len(all) != 637 {
-		t.Fatalf("engine command count = %d, want 637", len(all))
+	if len(all) != 645 {
+		t.Fatalf("engine command count = %d, want 645", len(all))
 	}
 	if all[0] != kustolang.EngineCommands.ShowDatabase ||
 		all[len(all)-1] != kustolang.EngineCommands.ReplaceDatabaseKeyVaultSecrets {

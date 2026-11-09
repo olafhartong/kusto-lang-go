@@ -94,10 +94,10 @@ func TestKustoCompleterOrdinarySyntaxDoesNotLeakScalarInfix(t *testing.T) {
 		want []string
 	}{
 		{text: "print 1 ", want: []string{"%", "*", "+", ",", "-", ".", "/", "[", "|"}},
-		{text: "let ", want: []string{".", "[", "|"}},
-		{text: "query_parameters ", want: []string{".", ";", "[", "|"}},
-		{text: "print \"😀\"; let ", want: []string{".", "[", "|"}},
-		{text: "// 😀\nlet ", want: []string{".", "[", "|"}},
+		{text: "let ", want: []string{"(", ".", "[", "|"}},
+		{text: "query_parameters ", want: []string{"(", ".", ";", "[", "|"}},
+		{text: "print \"😀\"; let ", want: []string{"(", ".", "[", "|"}},
+		{text: "// 😀\nlet ", want: []string{"(", ".", "[", "|"}},
 		{text: "let x = ; ", want: []string{}},
 	}
 	options := CompletionOptionsDefault.

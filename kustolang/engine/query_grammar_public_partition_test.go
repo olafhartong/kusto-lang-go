@@ -241,7 +241,7 @@ func TestQueryGrammarPublicPartitionByMissingParts(t *testing.T) {
 		t.Fatalf("partition-by missing close paren = %#v", missingParen.CloseParen())
 	}
 
-	assertQueryGrammarProductionLeavesTail(t, grammar.partitionByOperator, "__partitionby Tenant id (count)", 3)
+	assertQueryGrammarProductionLeavesTail(t, grammar.partitionByOperator, "__partitionby Tenant id (count) trailing", 6)
 }
 
 func TestQueryGrammarPublicPartitionTailBoundaries(t *testing.T) {

@@ -2,6 +2,7 @@ package kustolang
 
 import (
 	"sync"
+	"sync/atomic"
 	"testing"
 )
 
@@ -177,7 +178,8 @@ func TestNativeComputedFunctionCachesTableResultWithDeferredExpansion(t *testing
 		t.Fatalf("different computed result = %#v, want separate U table schema", differentResult)
 	}
 
-	second := ParseAndAnalyze(`Rows("T") | project A`, globals)
+	var cancelBinding atomic.Bool
+	second := ParseAndAnalyzeWithCancellation(`Rows("T") | project A`, globals, NewCancellationTokenFunc(cancelBinding.Load))
 	if diagnostics := second.GetDiagnostics(); len(diagnostics) != 0 {
 		t.Fatalf("cached call diagnostics = %#v", diagnostics)
 	}
@@ -194,6 +196,7 @@ func TestNativeComputedFunctionCachesTableResultWithDeferredExpansion(t *testing
 	if result := semanticTable(t, project); result.GetColumn("A") == nil || result.GetColumn("A").Type != ScalarTypes.String.Type() {
 		t.Fatalf("cached downstream result = %#v", result)
 	}
+	cancelBinding.Store(true)
 	if secondCall.GetCalledFunctionBody() == nil {
 		t.Fatal("deferred computed expansion did not bind on demand")
 	}

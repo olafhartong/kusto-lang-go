@@ -20,7 +20,7 @@ func TestCommandGrammarParsesUnknownCommandBlock(t *testing.T) {
 }
 
 func TestCommandGrammarParsesGeneratedEngineSimpleCommands(t *testing.T) {
-	if got := len(engineCommandParserInfos()); got != 637 {
+	if got := len(engineCommandParserInfos()); got != 645 {
 		t.Fatalf("engine simple command parser count = %d", got)
 	}
 

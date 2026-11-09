@@ -198,6 +198,7 @@ const KustoActorNameDiagnosticFixer
 const KustoActorNameExtractExpression
 const KustoActorNameFunctionInliner
 const KustoActorNameRename
+const KustoAnalyzerCodeAmbiguousNumericDateTimeLiteral
 const KustoAnalyzerCodeAvoidJoinWithoutKind
 const KustoAnalyzerCodeAvoidStrlenWithDynamic
 const KustoAnalyzerCodeAvoidUsingContains
@@ -211,6 +212,7 @@ const KustoAnalyzerCodeAvoidUsingShortStringComparision
 const KustoAnalyzerCodeAvoidUsingToBoolOnNumerics
 const KustoAnalyzerCodeCalledFunctionHasErrors
 const KustoAnalyzerCodeColumnHasSameNameAsVariable
+const KustoAnalyzerCodeInvalidDateTimeLiteral
 const KustoAnalyzerCodeNullAggregation
 const KustoAnalyzerCodePreferUsingMaterializedViewIntrinsic
 const KustoAnalyzerCodePreferUsingOptimizedAlternative
@@ -4064,6 +4066,14 @@ type EngineCommandCatalog struct {
 	DeleteMaterializedViewPolicyCaching			*CommandSymbol
 	DeleteGraphModelPolicyCaching				*CommandSymbol
 	DeleteClusterPolicyCaching				*CommandSymbol
+	ShowGraphModelPolicySnapshotIndexing			*CommandSymbol
+	ShowGraphModelStarPolicySnapshotIndexing		*CommandSymbol
+	AlterGraphModelPolicySnapshotIndexing			*CommandSymbol
+	DeleteGraphModelPolicySnapshotIndexing			*CommandSymbol
+	ShowGraphModelPolicyGraphQuery				*CommandSymbol
+	ShowGraphModelStarPolicyGraphQuery			*CommandSymbol
+	AlterGraphModelPolicyGraphQuery				*CommandSymbol
+	DeleteGraphModelPolicyGraphQuery			*CommandSymbol
 	ShowTablePolicyChangeDataCapture			*CommandSymbol
 	AlterTablePolicyChangeDataCapture			*CommandSymbol
 	AlterTablesPolicyChangeDataCapture			*CommandSymbol

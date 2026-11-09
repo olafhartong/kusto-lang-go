@@ -600,7 +600,7 @@ NotBetween
 HasAny
 HasAll
 
-[engine-commands] count=637
+[engine-commands] count=645
 ShowDatabase
 ShowDatabaseDetails
 ShowDatabaseIdentity
@@ -732,6 +732,14 @@ DeleteColumnPolicyCaching
 DeleteMaterializedViewPolicyCaching
 DeleteGraphModelPolicyCaching
 DeleteClusterPolicyCaching
+ShowGraphModelPolicySnapshotIndexing
+ShowGraphModelStarPolicySnapshotIndexing
+AlterGraphModelPolicySnapshotIndexing
+DeleteGraphModelPolicySnapshotIndexing
+ShowGraphModelPolicyGraphQuery
+ShowGraphModelStarPolicyGraphQuery
+AlterGraphModelPolicyGraphQuery
+DeleteGraphModelPolicyGraphQuery
 ShowTablePolicyChangeDataCapture
 AlterTablePolicyChangeDataCapture
 AlterTablesPolicyChangeDataCapture

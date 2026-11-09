@@ -209,6 +209,10 @@ func (g *QueryGrammar) initializeScalarExpressionParsers() {
 		SyntaxTokenKindParser(SyntaxKindIdentifierToken),
 		scanBracketedFunctionName,
 		knownFunctionToken,
+		Match(func(token LexicalToken) bool {
+			return IsKeywordKind(token.Kind) && SyntaxKindCanBeIdentifier(token.Kind) &&
+				token.Kind != SyntaxKindTypeOfKeyword && token.Kind != SyntaxKindInlineExternalTableKeyword
+		}).Hide(),
 		HiddenSyntaxTokenKindParser(SyntaxKindInlineExternalTableKeyword),
 	)
 	scanFunctionCall := And(scanFunctionCallName, SyntaxTokenKindParser(SyntaxKindOpenParenToken))

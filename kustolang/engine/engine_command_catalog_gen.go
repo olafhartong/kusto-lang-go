@@ -135,6 +135,14 @@ type engineCommandsSet struct {
 	DeleteMaterializedViewPolicyCaching                   *CommandSymbol
 	DeleteGraphModelPolicyCaching                         *CommandSymbol
 	DeleteClusterPolicyCaching                            *CommandSymbol
+	ShowGraphModelPolicySnapshotIndexing                  *CommandSymbol
+	ShowGraphModelStarPolicySnapshotIndexing              *CommandSymbol
+	AlterGraphModelPolicySnapshotIndexing                 *CommandSymbol
+	DeleteGraphModelPolicySnapshotIndexing                *CommandSymbol
+	ShowGraphModelPolicyGraphQuery                        *CommandSymbol
+	ShowGraphModelStarPolicyGraphQuery                    *CommandSymbol
+	AlterGraphModelPolicyGraphQuery                       *CommandSymbol
+	DeleteGraphModelPolicyGraphQuery                      *CommandSymbol
 	ShowTablePolicyChangeDataCapture                      *CommandSymbol
 	AlterTablePolicyChangeDataCapture                     *CommandSymbol
 	AlterTablesPolicyChangeDataCapture                    *CommandSymbol
@@ -779,6 +787,14 @@ func newEngineCommandsSet() *engineCommandsSet {
 	c.DeleteMaterializedViewPolicyCaching = NewCommandSymbol("DeleteMaterializedViewPolicyCaching", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
 	c.DeleteGraphModelPolicyCaching = NewCommandSymbol("DeleteGraphModelPolicyCaching", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
 	c.DeleteClusterPolicyCaching = NewCommandSymbol("DeleteClusterPolicyCaching", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.ShowGraphModelPolicySnapshotIndexing = NewCommandSymbol("ShowGraphModelPolicySnapshotIndexing", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.ShowGraphModelStarPolicySnapshotIndexing = NewCommandSymbol("ShowGraphModelStarPolicySnapshotIndexing", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.AlterGraphModelPolicySnapshotIndexing = NewCommandSymbol("AlterGraphModelPolicySnapshotIndexing", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.DeleteGraphModelPolicySnapshotIndexing = NewCommandSymbol("DeleteGraphModelPolicySnapshotIndexing", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.ShowGraphModelPolicyGraphQuery = NewCommandSymbol("ShowGraphModelPolicyGraphQuery", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.ShowGraphModelStarPolicyGraphQuery = NewCommandSymbol("ShowGraphModelStarPolicyGraphQuery", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.AlterGraphModelPolicyGraphQuery = NewCommandSymbol("AlterGraphModelPolicyGraphQuery", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
+	c.DeleteGraphModelPolicyGraphQuery = NewCommandSymbol("DeleteGraphModelPolicyGraphQuery", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
 	c.ShowTablePolicyChangeDataCapture = NewCommandSymbol("ShowTablePolicyChangeDataCapture", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
 	c.AlterTablePolicyChangeDataCapture = NewCommandSymbol("AlterTablePolicyChangeDataCapture", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
 	c.AlterTablesPolicyChangeDataCapture = NewCommandSymbol("AlterTablesPolicyChangeDataCapture", "(PolicyName: string, EntityName: string, Policy: string, ChildEntities: string, EntityType: string)")
@@ -1417,6 +1433,14 @@ func newEngineCommandsSet() *engineCommandsSet {
 		c.DeleteMaterializedViewPolicyCaching,
 		c.DeleteGraphModelPolicyCaching,
 		c.DeleteClusterPolicyCaching,
+		c.ShowGraphModelPolicySnapshotIndexing,
+		c.ShowGraphModelStarPolicySnapshotIndexing,
+		c.AlterGraphModelPolicySnapshotIndexing,
+		c.DeleteGraphModelPolicySnapshotIndexing,
+		c.ShowGraphModelPolicyGraphQuery,
+		c.ShowGraphModelStarPolicyGraphQuery,
+		c.AlterGraphModelPolicyGraphQuery,
+		c.DeleteGraphModelPolicyGraphQuery,
 		c.ShowTablePolicyChangeDataCapture,
 		c.AlterTablePolicyChangeDataCapture,
 		c.AlterTablesPolicyChangeDataCapture,

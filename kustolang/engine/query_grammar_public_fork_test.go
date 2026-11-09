@@ -165,7 +165,7 @@ func TestQueryGrammarPublicForkPlacement(t *testing.T) {
 		})
 	}
 
-	assertQueryGrammarProductionLeavesTail(t, grammar.Expression, "fork (count)", 1)
+	assertQueryGrammarProductionLeavesTail(t, grammar.Expression, "fork (count) trailing", 4)
 	pipeline := parseQueryGrammarProduction(t, grammar.Expression, "Events | fork (where Active) Named=(count)")
 	forkPipe, forkNode := queryGrammarPipeStage(t, pipeline, SyntaxKindForkOperator)
 	if source, ok := forkPipe.Expression().(*NameReference); !ok || NameReferenceSimpleName(source) != "Events" {

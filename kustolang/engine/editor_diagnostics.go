@@ -29,6 +29,8 @@ const (
 	KustoAnalyzerCodeAvoidUsingHasWithIPv4Strings         = "KS514"
 	KustoAnalyzerCodePreferUsingOptimizedAlternative      = "KS515"
 	KustoAnalyzerCodeAvoidStrlenWithDynamic               = "KS516"
+	KustoAnalyzerCodeInvalidDateTimeLiteral               = "KS517"
+	KustoAnalyzerCodeAmbiguousNumericDateTimeLiteral      = "KS518"
 )
 
 const disabledDiagnosticsSeverityPrefix = "sev:"
@@ -141,6 +143,8 @@ var kustoAnalyzerCodesThatCanBeDisabled = map[string]struct{}{
 	KustoAnalyzerCodeAvoidUsingHasWithIPv4Strings:         {},
 	KustoAnalyzerCodePreferUsingOptimizedAlternative:      {},
 	KustoAnalyzerCodeAvoidStrlenWithDynamic:               {},
+	KustoAnalyzerCodeInvalidDateTimeLiteral:               {},
+	KustoAnalyzerCodeAmbiguousNumericDateTimeLiteral:      {},
 }
 
 func CanDisableCode(code string) bool {

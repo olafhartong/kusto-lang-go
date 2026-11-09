@@ -580,7 +580,7 @@ func unknownNameSemanticInfo(name string, match SymbolMatch, inTabularContext bo
 	case matchRequestsOnly(match, SymbolMatchStoredQueryResult):
 		return NewSemanticInfoForReferencedSymbol(Error, DiagnosticNameDoesNotReferToAnyKnownStoredQueryResult(name))
 	case matchRequestsOnly(match, SymbolMatchGraphModel):
-		return NewSemanticInfoForReferencedSymbol(Error, DiagnosticNameDoesNotReferToAnyKnownGraphModel(name))
+		return NewSemanticInfoForReferencedSymbol(Error, DiagnosticNameDoesNotReferToAnyKnownItem(name, ""))
 	case inTabularContext || matchRequestsTabularName(match):
 		table := NewTableSymbol(name).WithIsOpen(true)
 		return NewSemanticInfoForSymbol(table, &table.TypeSymbol, DiagnosticNameDoesNotReferToAnyKnownTableOrFunction(name))

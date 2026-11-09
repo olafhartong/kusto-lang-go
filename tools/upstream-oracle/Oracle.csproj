@@ -11,6 +11,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Compatibility.cs" />
     <Compile Include="Caching.cs" />
+    <Compile Include="November.cs" />
     <Compile Include="$(UpstreamRoot)/src/Kusto.Language/**/*.cs" Exclude="$(UpstreamRoot)/src/Kusto.Language/**/obj/**;$(UpstreamRoot)/src/Kusto.Language/**/bin/**" />
     <Compile Include="$(GeneratedRoot)/*.cs" />
   </ItemGroup>

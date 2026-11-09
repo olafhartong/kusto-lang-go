@@ -20,6 +20,7 @@ type KustoAnalyzersCatalog struct {
 	AvoidUsingHasWithIPv4Strings         KustoAnalyzer
 	PreferUsingOptimizedAlternative      KustoAnalyzer
 	AvoidStrlenWithDynamic               KustoAnalyzer
+	DateTimeLiteral                      KustoAnalyzer
 
 	all []KustoAnalyzer
 }
@@ -44,6 +45,7 @@ func newKustoAnalyzersCatalog() *KustoAnalyzersCatalog {
 		AvoidUsingHasWithIPv4Strings:         NewAvoidUsingHasWithIPv4StringsAnalyzer(),
 		PreferUsingOptimizedAlternative:      NewPreferUsingOptimizedAlternativeAnalyzer(),
 		AvoidStrlenWithDynamic:               NewAvoidStrlenWithDynamicAnalyzer(),
+		DateTimeLiteral:                      NewDateTimeLiteralAnalyzer(),
 	}
 	catalog.all = ListToReadOnly([]KustoAnalyzer{
 		catalog.AvoidUsingContains,
@@ -61,6 +63,7 @@ func newKustoAnalyzersCatalog() *KustoAnalyzersCatalog {
 		catalog.AvoidUsingHasWithIPv4Strings,
 		catalog.PreferUsingOptimizedAlternative,
 		catalog.AvoidStrlenWithDynamic,
+		catalog.DateTimeLiteral,
 	})
 	return catalog
 }

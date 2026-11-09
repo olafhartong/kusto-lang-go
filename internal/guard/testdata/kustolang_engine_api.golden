@@ -196,6 +196,7 @@ const KustoActorNameDiagnosticFixer
 const KustoActorNameExtractExpression
 const KustoActorNameFunctionInliner
 const KustoActorNameRename
+const KustoAnalyzerCodeAmbiguousNumericDateTimeLiteral
 const KustoAnalyzerCodeAvoidJoinWithoutKind
 const KustoAnalyzerCodeAvoidStrlenWithDynamic
 const KustoAnalyzerCodeAvoidUsingContains
@@ -209,6 +210,7 @@ const KustoAnalyzerCodeAvoidUsingShortStringComparision
 const KustoAnalyzerCodeAvoidUsingToBoolOnNumerics
 const KustoAnalyzerCodeCalledFunctionHasErrors
 const KustoAnalyzerCodeColumnHasSameNameAsVariable
+const KustoAnalyzerCodeInvalidDateTimeLiteral
 const KustoAnalyzerCodeNullAggregation
 const KustoAnalyzerCodePreferUsingMaterializedViewIntrinsic
 const KustoAnalyzerCodePreferUsingOptimizedAlternative
@@ -4800,6 +4802,7 @@ func NewDataTableExpressionTyped(dataTableKeyword *SyntaxToken, parameters *Synt
 func NewDatabaseReference(database string, cluster string, start int, length int) DatabaseReference
 func NewDatabaseSymbol(name string, members ...Symbol) *DatabaseSymbol
 func NewDatabaseSymbolWithAlternateName(name, alternateName string, members []Symbol, isOpen bool) *DatabaseSymbol
+func NewDateTimeLiteralAnalyzer() KustoAnalyzer
 func NewDateTimePattern(children []SyntaxElement, diagnostics ...Diagnostic) (*DateTimePattern, error)
 func NewDateTimePatternTyped(dateTimePatternKeyword *SyntaxToken, openParen *SyntaxToken, stringLiteral *LiteralExpression, comma *SyntaxToken, partitionColumn *NameReference, closeParen *SyntaxToken, diagnostics ...Diagnostic) (*DateTimePattern, error)
 func NewDeclarationFunctionSymbol(name string, declaration *FunctionBody, parameters ...*Parameter) *FunctionSymbol
@@ -6897,6 +6900,7 @@ type KustoAnalyzersCatalog struct {
 	AvoidUsingHasWithIPv4Strings		KustoAnalyzer
 	PreferUsingOptimizedAlternative		KustoAnalyzer
 	AvoidStrlenWithDynamic			KustoAnalyzer
+	DateTimeLiteral				KustoAnalyzer
 
 	all	[]KustoAnalyzer
 }

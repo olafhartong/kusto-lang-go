@@ -13,7 +13,7 @@ import (
 )
 
 func TestUpstream13SourceOracleCompatibility(t *testing.T) {
-	for _, commit := range []string{"328e05d10d6c73654e416675fc75af7ed0e05ffd", nov01Commit} {
+	for _, commit := range []string{"328e05d10d6c73654e416675fc75af7ed0e05ffd", nov01Commit, nov08Commit} {
 		t.Run(commit[:7], func(t *testing.T) { testUpstream13SourceOracleCompatibility(t, commit) })
 	}
 }

@@ -628,7 +628,9 @@ func (n *simpleNodeBinder) deferredComputedFunctionExpansion(signature *Signatur
 				cache.expansionMu.Lock()
 				defer cache.expansionMu.Unlock()
 			}
-			_, info := n.bindComputedFunctionCore(signature, arguments, argumentTypes, argumentParameters, false)
+			deferred := *n.binder
+			deferred.cancellationToken = CancellationToken{}
+			_, info := newSimpleNodeBinder(&deferred).bindComputedFunctionCore(signature, arguments, argumentTypes, argumentParameters, false)
 			if info != nil {
 				expansion = info.Expansion()
 			}

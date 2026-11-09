@@ -140,6 +140,14 @@ type EngineCommandCatalog struct {
 	DeleteMaterializedViewPolicyCaching                   *CommandSymbol
 	DeleteGraphModelPolicyCaching                         *CommandSymbol
 	DeleteClusterPolicyCaching                            *CommandSymbol
+	ShowGraphModelPolicySnapshotIndexing                  *CommandSymbol
+	ShowGraphModelStarPolicySnapshotIndexing              *CommandSymbol
+	AlterGraphModelPolicySnapshotIndexing                 *CommandSymbol
+	DeleteGraphModelPolicySnapshotIndexing                *CommandSymbol
+	ShowGraphModelPolicyGraphQuery                        *CommandSymbol
+	ShowGraphModelStarPolicyGraphQuery                    *CommandSymbol
+	AlterGraphModelPolicyGraphQuery                       *CommandSymbol
+	DeleteGraphModelPolicyGraphQuery                      *CommandSymbol
 	ShowTablePolicyChangeDataCapture                      *CommandSymbol
 	AlterTablePolicyChangeDataCapture                     *CommandSymbol
 	AlterTablesPolicyChangeDataCapture                    *CommandSymbol
@@ -785,6 +793,14 @@ func newEngineCommandCatalog() *EngineCommandCatalog {
 		DeleteMaterializedViewPolicyCaching:                   source.DeleteMaterializedViewPolicyCaching,
 		DeleteGraphModelPolicyCaching:                         source.DeleteGraphModelPolicyCaching,
 		DeleteClusterPolicyCaching:                            source.DeleteClusterPolicyCaching,
+		ShowGraphModelPolicySnapshotIndexing:                  source.ShowGraphModelPolicySnapshotIndexing,
+		ShowGraphModelStarPolicySnapshotIndexing:              source.ShowGraphModelStarPolicySnapshotIndexing,
+		AlterGraphModelPolicySnapshotIndexing:                 source.AlterGraphModelPolicySnapshotIndexing,
+		DeleteGraphModelPolicySnapshotIndexing:                source.DeleteGraphModelPolicySnapshotIndexing,
+		ShowGraphModelPolicyGraphQuery:                        source.ShowGraphModelPolicyGraphQuery,
+		ShowGraphModelStarPolicyGraphQuery:                    source.ShowGraphModelStarPolicyGraphQuery,
+		AlterGraphModelPolicyGraphQuery:                       source.AlterGraphModelPolicyGraphQuery,
+		DeleteGraphModelPolicyGraphQuery:                      source.DeleteGraphModelPolicyGraphQuery,
 		ShowTablePolicyChangeDataCapture:                      source.ShowTablePolicyChangeDataCapture,
 		AlterTablePolicyChangeDataCapture:                     source.AlterTablePolicyChangeDataCapture,
 		AlterTablesPolicyChangeDataCapture:                    source.AlterTablesPolicyChangeDataCapture,

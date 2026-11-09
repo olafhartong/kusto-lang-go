@@ -65,9 +65,7 @@ func TestKustoCodeServiceCanceledBindingCanRetryMalformedQuery(t *testing.T) {
 	var checks atomic.Int32
 	canceled := NewCancellationTokenFunc(func() bool { return checks.Add(1) >= 32 })
 
-	if diagnostics := service.GetDiagnostics(true, canceled); len(diagnostics) != 0 {
-		t.Fatalf("canceled diagnostics = %#v, want empty", diagnostics)
-	}
+	assertOperationCanceled(t, func() { service.GetDiagnostics(true, canceled) })
 	if checks.Load() < 32 {
 		t.Fatalf("cancellation checks = %d, want at least 32", checks.Load())
 	}
@@ -102,9 +100,7 @@ func TestKustoCodeServiceCanceledDiagnosticTraversalCanRetry(t *testing.T) {
 	var checks atomic.Int32
 	canceled := NewCancellationTokenFunc(func() bool { return checks.Add(1) >= 24 })
 
-	if diagnostics := service.GetDiagnostics(true, canceled); len(diagnostics) != 0 {
-		t.Fatalf("canceled diagnostic traversal = %#v, want empty", diagnostics)
-	}
+	assertOperationCanceled(t, func() { service.GetDiagnostics(true, canceled) })
 	if checks.Load() < 24 {
 		t.Fatalf("diagnostic cancellation checks = %d, want at least 24", checks.Load())
 	}
@@ -132,9 +128,10 @@ func TestKustoCodeServiceCanceledInitializerDoesNotBlockLiveCallers(t *testing.T
 		return true
 	})
 
-	canceledResult := make(chan []Diagnostic, 1)
+	canceledResult := make(chan any, 1)
 	go func() {
-		canceledResult <- service.GetDiagnostics(true, canceled)
+		defer func() { canceledResult <- recover() }()
+		service.GetDiagnostics(true, canceled)
 	}()
 	<-started
 
@@ -147,8 +144,8 @@ func TestKustoCodeServiceCanceledInitializerDoesNotBlockLiveCallers(t *testing.T
 	}
 	close(release)
 
-	if diagnostics := <-canceledResult; len(diagnostics) != 0 {
-		t.Fatalf("canceled initializer diagnostics = %#v, want empty", diagnostics)
+	if recovered := <-canceledResult; !kustoCodeServiceIsCancellationPanic(recovered) {
+		t.Fatalf("canceled initializer panic = %#v, want cancellation", recovered)
 	}
 	var first []Diagnostic
 	for i := 0; i < callers; i++ {
