@@ -543,6 +543,7 @@ type engineCommandsSet struct {
 	DropEntityGroup                                       *CommandSymbol
 	ShowEntityGroup                                       *CommandSymbol
 	ShowEntityGroups                                      *CommandSymbol
+	AlterDatabaseExtentContainerPath                      *CommandSymbol
 	AlterExtentContainersAdd                              *CommandSymbol
 	AlterExtentContainersDrop                             *CommandSymbol
 	AlterExtentContainersRecycle                          *CommandSymbol
@@ -1195,6 +1196,7 @@ func newEngineCommandsSet() *engineCommandsSet {
 	c.DropEntityGroup = NewCommandSymbol("DropEntityGroup", "(Name: string, Entities: string)")
 	c.ShowEntityGroup = NewCommandSymbol("ShowEntityGroup", "(Name: string, Entities: string)")
 	c.ShowEntityGroups = NewCommandSymbol("ShowEntityGroups", "(Name: string, Entities: string)")
+	c.AlterDatabaseExtentContainerPath = NewCommandSymbol("AlterDatabaseExtentContainerPath", "(ExtentContainerId:guid, Url:string, State:string, CreatedOn:datetime, MaxDateTime:datetime, IsRecyclable:bool, StoresDatabaseMetadataPointer:bool, HardDeletePeriod:timespan, ActiveMetadataContainer:bool, MetadataContainer:bool)", "DatabaseExtentContainerAlterPathCommand(DatabaseName, (PropertyName, PropertyValue)*)")
 	c.AlterExtentContainersAdd = NewCommandSymbol("AlterExtentContainersAdd", "(ExtentContainerId:guid, Url:string, State:string, CreatedOn:datetime, MaxDateTime:datetime, IsRecyclable:bool, StoresDatabaseMetadataPointer:bool, HardDeletePeriod:timespan, ActiveMetadataContainer:bool, MetadataContainer:bool)")
 	c.AlterExtentContainersDrop = NewCommandSymbol("AlterExtentContainersDrop", "()")
 	c.AlterExtentContainersRecycle = NewCommandSymbol("AlterExtentContainersRecycle", "()")
@@ -1841,6 +1843,7 @@ func newEngineCommandsSet() *engineCommandsSet {
 		c.DropEntityGroup,
 		c.ShowEntityGroup,
 		c.ShowEntityGroups,
+		c.AlterDatabaseExtentContainerPath,
 		c.AlterExtentContainersAdd,
 		c.AlterExtentContainersDrop,
 		c.AlterExtentContainersRecycle,

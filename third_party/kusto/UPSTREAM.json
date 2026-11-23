@@ -1,22 +1,22 @@
 {
   "name": "Microsoft Kusto Query Language",
   "repository": "https://github.com/microsoft/Kusto-Query-Language",
-  "commit": "dbd7ca7684adfd7a38536f74728670dc54a67acc",
+  "commit": "3a7d2d690172a4ac73d6b2e2ae5b2f6a37cbe64f",
   "license": "Apache-2.0",
   "license_file": "third_party/kusto/LICENSE",
   "license_sha256": "e93c330dde94b38e3f0289376bfa7f25c402a13cc723e493b15622dcc3391c70",
   "notice_file": "THIRD_PARTY_NOTICES.md",
-  "notice_sha256": "9a9f5728999c4a118f8da5ef4fd455d3ac91ca1babaa2b3ca1c5ebc05f5d85b3",
+  "notice_sha256": "1df769b150d13fa68d7703aba2e521deab91ea74e5589501e0bc83b515380fc5",
   "profiles": {
     "current": {
-      "version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-11-08",
-      "source_commit": "dbd7ca7684adfd7a38536f74728670dc54a67acc"
+      "version": "Kusto-Query-Language/13.0.0 + auto-sync through 2026-11-12",
+      "source_commit": "3a7d2d690172a4ac73d6b2e2ae5b2f6a37cbe64f"
     }
   },
   "differential_parity_attestations": [
     {
       "name": "current-query-structural-v7",
-      "commit": "dbd7ca7684adfd7a38536f74728670dc54a67acc",
+      "commit": "3a7d2d690172a4ac73d6b2e2ae5b2f6a37cbe64f",
       "query_count": 258,
       "corpus": {
         "path": "parity-artifacts/kql-v7-corpus-final.json",
@@ -37,11 +37,11 @@
       "supporting_artifacts": [
         {
           "path": "tools/upstream-oracle/Oracle.csproj",
-          "sha256": "7c41ca18d35c1aae2dfeeacfd16d451ed8a07daa1507ab3d3c6a883b184818f3"
+          "sha256": "cb6911bed979a91141c4c65c2188c889eba94798a91619f726b3f6e32a378131"
         },
         {
           "path": "tools/upstream-oracle/Program.cs",
-          "sha256": "de1fffd6c904b60032e108952f3d95dba507c1e7ca6f987dc09d90f0d54e9abb"
+          "sha256": "46b19c57cc0653c162a4df4d6ac3cf59ee25d7e77e690a21f4e3b2e8fd6d5e00"
         },
         {
           "path": "tools/upstream-oracle/Compatibility.cs",
@@ -56,6 +56,10 @@
           "sha256": "29555b44102dd6a98acbb51c5753316a970184f74bfa0b5fb6f520c98c0f36f4"
         },
         {
+          "path": "tools/upstream-oracle/November12.cs",
+          "sha256": "42b1ce891fd0f6d3ba0673544bfc6f8df22ac42b2f92da1d54c0efc749166108"
+        },
+        {
           "path": "tools/upstream-oracle/generate/Generate.csproj",
           "sha256": "1703bc6cea2c706c7c3cc26b75f0473b81f19b1fba1d25fe70ea1bed2d3b1664"
         },
@@ -65,7 +69,7 @@
         },
         {
           "path": "tools/upstream-oracle/refresh.py",
-          "sha256": "b7050cad28df0224700ab5119ad014f78f319f944b9cea8cdc7c3659a51873ce"
+          "sha256": "53d985d399e90aceb9a6a82363131a4a570c53ddda128aff56f24f9df2f58505"
         },
         {
           "path": "tools/upstream-parity-native/main.go",
@@ -94,12 +98,28 @@
         {
           "path": "kustolang/engine/testdata/upstream_dbd7ca7_caching.json",
           "sha256": "4d75d78d5e738cfe85e2a02bc911d9f057b87dc4db5767af52b1056ae4e5b90b"
+        },
+        {
+          "path": "kustolang/engine/testdata/upstream_3a7d2d6_commands.json",
+          "sha256": "ce7ad7d0e213e2558a0f230d6902e404d1cb527390736c66edb7a48fbe5e44ec"
+        },
+        {
+          "path": "kustolang/engine/testdata/upstream_3a7d2d6_behavior.json",
+          "sha256": "60f08f81b6df6b00566445e5372b9f04685cb41f4c2d62b1333c412f751ec2a6"
+        },
+        {
+          "path": "kustolang/engine/testdata/upstream_3a7d2d6_compatibility.json",
+          "sha256": "73e9146f04b3ec4919e02aa8525727ad88030e15d119e9f13f84615bfd75711e"
+        },
+        {
+          "path": "kustolang/engine/testdata/upstream_3a7d2d6_caching.json",
+          "sha256": "7e26e8ba40ef35bb983d74a8dae25c5a622e839ca38e7349925bd10335a42c4c"
         }
       ]
     },
     {
       "name": "current-command-structural-v8",
-      "commit": "dbd7ca7684adfd7a38536f74728670dc54a67acc",
+      "commit": "3a7d2d690172a4ac73d6b2e2ae5b2f6a37cbe64f",
       "query_count": 231,
       "corpus": {
         "path": "parity-artifacts/kql-command-corpus-v8.json",
@@ -130,5 +150,5 @@
       "sha256": "9ac212ea5eccd1cb4062113736fdda5749928ceeb0e2e254d55829aeac031fa2"
     }
   },
-  "notes": "Go files derived from Kusto.Language must retain their upstream notice and Apache-2.0 attribution. Intentionally not ported: internal .NET memory-layout struct CacheLineSeparated<T> in src/Kusto.Language/Utils/Interlocked.cs (no public surface). Intentional extension beyond upstream: the diffpatterns_text evaluate plug-in (a Kusto service plug-in that upstream Kusto.Language does not model). Catalog inventories are pinned by kustolang/engine/testdata/catalog_attestation.golden. The e3d07b0 repin changes only ShowTablesDetails and ShowTableDetails result schemas plus the ShowCapacity resource grammar; the existing differential corpora do not exercise those commands, so their canonical artifacts are unchanged and dedicated regressions cover the new behavior. The 9d09d29 repin adds ShowDatabasePolicyRowId, AlterDatabasePolicyRowId, and DeleteDatabasePolicyRowId. The existing query and function-management command parity corpora do not exercise rowid policies; their canonical artifacts are unchanged and replayed by native tests. Dedicated command regressions cover the new grammar and result schemas. Upstream CI-only changes do not affect the port. The 8aa8e70 repin makes dax_request and gql_request visible and limits each to two required string arguments; optional parameter bags and options are not yet supported by the engine. Neither plug-in occurs in the attested query or function-management command corpora or their generators, so the canonical artifacts are unchanged and replayed by native tests. Dedicated regressions cover valid calls, argument-count/type diagnostics, open runtime schemas, and evaluate completion. The EngineCommandInfos.cs change in 8aa8e70 only updates a regeneration comment and requires no Go change. The 6b5c2f7 repin adds four changedatacapture table policy commands and four materialized-view-prioritization cluster policy commands, with EffectivePolicy on the show-cluster result. It adds IsCommonArgumentTypeKind and bounded computed-column literal completions for shared-type function arguments, preserving source literal syntax and compound hidden-string semantics. Both existing differential corpora (258 query cases and 231 command cases) were re-run against a source oracle built from 6b5c2f7 and match the unchanged canonical artifacts exactly. Dedicated source-oracle regressions in testdata/upstream_6b5c2f7_parity.json cover 20 valid/invalid policy commands and 14 computed-column completion cases, including the work and UTF-16 length limits. The 328e05d repin upgrades to 13.0.0: invariant literal parsing and completion examples, ordinal Unicode equality and ordering, case-insensitive wildcard middle segments, supplementary-scalar scanners, and bounded TextSource matching. Both existing corpora (258 queries and 231 commands) were independently replayed against a source build at 328e05d and the Go port; canonical outputs are unchanged. The compatibility fixture records 19 comparison cases, 13 wildcard cases, 31 literal values, 19 scanner cases, 6 source-boundary cases, 8 completion value examples, and completion ordering, verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. Supporting artifact hashes bind the fixture and reproducible source/native oracle tools to this attestation. The 82267c7 repin follows the 2026-11-01 13.0.0 source synchronization. SourceCache factory calls drop from two to one per miss; QueryGrammar.From now publishes one lazy process-wide instance per combination of the three boolean parse options, independent of globals/cache/schema and parser kind. Go KustoCache already called its factory once and retains its stronger serialized concurrency behavior. The 2026-10-27 ed2732f solution-file migration changes no Go runtime behavior. Both existing corpora (258 queries and 231 commands) were rerun against a source build at 82267c7 and match the Go port exactly; canonical outputs are unchanged. Fresh compatibility and cache/grammar fixtures at 82267c7 were verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. The historical 328e05d compatibility fixture is retained and still replayed by native tests. The dbd7ca7 repin covers source changes from 2026-11-02 through 2026-11-08 without a Microsoft package-version bump. Added the DateTimeLiteral analyzer (KS517 invalid literals and KS518 ambiguous numeric literals) and an internal service-literal interpretation parser; SyntaxToken.Value retains upstream's separate invariant token parser. Added eight graph_model snapshot_indexing/graph_query policy commands, command-completion metadata, and generic unknown-name diagnostics for graph-model references. Keyword-as-identifier function names are now recognized by the grammar parser. Complete commands skip partial-recovery search. Code-service binding/diagnostics/analyzers propagate cancellation without caching it; deferred computed-function expansion uses an independent token. ParseAndAnalyze and has_any/has_all AST kinds already matched and require no runtime change. The CodeGenerator unindented-output option and .NET span-based timespan parsing are upstream tooling/allocation improvements; existing Go string-slice and literal behavior is preserved. Both existing differential corpora (489 cases) were replayed from this exact source revision, plus a dedicated November datetime/analyzer/parser/command fixture under five cultures. Historical fixtures and their evidence remain checked in."
+  "notes": "Go files derived from Kusto.Language must retain their upstream notice and Apache-2.0 attribution. Intentionally not ported: internal .NET memory-layout struct CacheLineSeparated<T> in src/Kusto.Language/Utils/Interlocked.cs (no public surface). Intentional extension beyond upstream: the diffpatterns_text evaluate plug-in (a Kusto service plug-in that upstream Kusto.Language does not model). Catalog inventories are pinned by kustolang/engine/testdata/catalog_attestation.golden. The e3d07b0 repin changes only ShowTablesDetails and ShowTableDetails result schemas plus the ShowCapacity resource grammar; the existing differential corpora do not exercise those commands, so their canonical artifacts are unchanged and dedicated regressions cover the new behavior. The 9d09d29 repin adds ShowDatabasePolicyRowId, AlterDatabasePolicyRowId, and DeleteDatabasePolicyRowId. The existing query and function-management command parity corpora do not exercise rowid policies; their canonical artifacts are unchanged and replayed by native tests. Dedicated command regressions cover the new grammar and result schemas. Upstream CI-only changes do not affect the port. The 8aa8e70 repin makes dax_request and gql_request visible and limits each to two required string arguments; optional parameter bags and options are not yet supported by the engine. Neither plug-in occurs in the attested query or function-management command corpora or their generators, so the canonical artifacts are unchanged and replayed by native tests. Dedicated regressions cover valid calls, argument-count/type diagnostics, open runtime schemas, and evaluate completion. The EngineCommandInfos.cs change in 8aa8e70 only updates a regeneration comment and requires no Go change. The 6b5c2f7 repin adds four changedatacapture table policy commands and four materialized-view-prioritization cluster policy commands, with EffectivePolicy on the show-cluster result. It adds IsCommonArgumentTypeKind and bounded computed-column literal completions for shared-type function arguments, preserving source literal syntax and compound hidden-string semantics. Both existing differential corpora (258 query cases and 231 command cases) were re-run against a source oracle built from 6b5c2f7 and match the unchanged canonical artifacts exactly. Dedicated source-oracle regressions in testdata/upstream_6b5c2f7_parity.json cover 20 valid/invalid policy commands and 14 computed-column completion cases, including the work and UTF-16 length limits. The 328e05d repin upgrades to 13.0.0: invariant literal parsing and completion examples, ordinal Unicode equality and ordering, case-insensitive wildcard middle segments, supplementary-scalar scanners, and bounded TextSource matching. Both existing corpora (258 queries and 231 commands) were independently replayed against a source build at 328e05d and the Go port; canonical outputs are unchanged. The compatibility fixture records 19 comparison cases, 13 wildcard cases, 31 literal values, 19 scanner cases, 6 source-boundary cases, 8 completion value examples, and completion ordering, verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. Supporting artifact hashes bind the fixture and reproducible source/native oracle tools to this attestation. The 82267c7 repin follows the 2026-11-01 13.0.0 source synchronization. SourceCache factory calls drop from two to one per miss; QueryGrammar.From now publishes one lazy process-wide instance per combination of the three boolean parse options, independent of globals/cache/schema and parser kind. Go KustoCache already called its factory once and retains its stronger serialized concurrency behavior. The 2026-10-27 ed2732f solution-file migration changes no Go runtime behavior. Both existing corpora (258 queries and 231 commands) were rerun against a source build at 82267c7 and match the Go port exactly; canonical outputs are unchanged. Fresh compatibility and cache/grammar fixtures at 82267c7 were verified under en-US, fr-FR, tr-TR, da-DK, and cs-CZ. The historical 328e05d compatibility fixture is retained and still replayed by native tests. The dbd7ca7 repin covers source changes from 2026-11-02 through 2026-11-08 without a Microsoft package-version bump. Added the DateTimeLiteral analyzer (KS517 invalid literals and KS518 ambiguous numeric literals) and an internal service-literal interpretation parser; SyntaxToken.Value retains upstream's separate invariant token parser. Added eight graph_model snapshot_indexing/graph_query policy commands, command-completion metadata, and generic unknown-name diagnostics for graph-model references. Keyword-as-identifier function names are now recognized by the grammar parser. Complete commands skip partial-recovery search. Code-service binding/diagnostics/analyzers propagate cancellation without caching it; deferred computed-function expansion uses an independent token. ParseAndAnalyze and has_any/has_all AST kinds already matched and require no runtime change. The CodeGenerator unindented-output option and .NET span-based timespan parsing are upstream tooling/allocation improvements; existing Go string-slice and literal behavior is preserved. Both existing differential corpora (489 cases) were replayed from this exact source revision, plus a dedicated November datetime/analyzer/parser/command fixture under five cultures. Historical fixtures and their evidence remain checked in. The 3a7d2d6 repin covers four source synchronizations from 2026-11-09 through 2026-11-12; Microsoft's version remains 13.0.0. ShowCapacity replaces update-policy-over-external-table with async-update-policy. Added the hidden AlterDatabaseExtentContainerPath command, its construction metadata, ten-column result schema, and public catalog entry (646 engine commands). StringTable.AddRange now delegates directly to get-or-add, eliminating the redundant pre-lookup; the public UTF-16 facade already did so. CommandGenerator changes regeneration guidance comments only. Both existing corpora (489 cases) were independently replayed against the exact source revision, plus new command/recovery/completion and string-range regressions under five cultures. Existing datetime, analyzer, parser, cache, and compatibility fixtures were refreshed and historical fixtures retained."
 }

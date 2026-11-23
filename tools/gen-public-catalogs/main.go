@@ -26,8 +26,8 @@ func main() {
 	writeFunctionCatalog(root, functionFields)
 
 	commandFields := catalogFields(filepath.Join(root, "kustolang", "engine", "engine_command_catalog_gen.go"), "engineCommandsSet")
-	if len(commandFields) != 645 {
-		panic(fmt.Errorf("engine command catalog field count = %d, want 645", len(commandFields)))
+	if len(commandFields) != 646 {
+		panic(fmt.Errorf("engine command catalog field count = %d, want 646", len(commandFields)))
 	}
 	writeCommandCatalog(root, commandFields)
 }

@@ -3252,7 +3252,7 @@ func engineCommandParserInfos() []commandParserInfo {
 		tokenCommandParserInfo("ShowCapacity", []commandTokenElement{
 			{Alternatives: []string{"show"}, Optional: false},
 			{Alternatives: []string{"capacity"}, Optional: false},
-			{Alternatives: []string{"ingestions", "extents-merge", "table-purge", "data-export", "mirroring", "query-acceleration", "update-policy-over-external-table", "extents-partition", "streaming-ingestion-post-processing", "materialized-view", "graph_snapshot", "queries", "stored-query-results", "purge-storage-artifacts-cleanup", "periodic-storage-artifacts-cleanup"}, Name: "Resource", ShapeOptional: true, Optional: true},
+			{Alternatives: []string{"ingestions", "extents-merge", "table-purge", "data-export", "mirroring", "query-acceleration", "async-update-policy", "extents-partition", "streaming-ingestion-post-processing", "materialized-view", "graph_snapshot", "queries", "stored-query-results", "purge-storage-artifacts-cleanup", "periodic-storage-artifacts-cleanup"}, Name: "Resource", ShapeOptional: true, Optional: true},
 			{Children: []commandTokenElement{{Alternatives: []string{"with"}, Optional: false}, {Alternatives: []string{"("}, Optional: false}, {Alternatives: []string{"scope"}, Optional: false}, {Alternatives: []string{"="}, Optional: false}, {Alternatives: []string{"cluster", "workloadgroup"}, Name: "Scope", Optional: false}, {Alternatives: []string{")"}, Optional: false}}, ShapeOptional: true, Optional: true},
 		}),
 		tokenCommandParserInfo("ShowOperations", []commandTokenElement{
@@ -3973,6 +3973,13 @@ func engineCommandParserInfos() []commandParserInfo {
 		tokenCommandParserInfo("ShowEntityGroups", []commandTokenElement{
 			{Alternatives: []string{"show"}, Optional: false},
 			{Alternatives: []string{"entity_groups"}, Optional: false},
+		}),
+		tokenCommandParserInfo("AlterDatabaseExtentContainerPath", []commandTokenElement{
+			{Alternatives: []string{"alter"}, Hidden: true, Optional: false},
+			{Alternatives: []string{"database"}, Hidden: true, Optional: false},
+			{Rule: "DatabaseNameReference", Expected: "<database>", Name: "DatabaseName", Hint: CompletionHintDatabase, HasHint: true, Hidden: true, Optional: false},
+			{Alternatives: []string{"extentcontainer"}, Hidden: true, Optional: false},
+			{Children: []commandTokenElement{{Alternatives: []string{"with"}, Optional: false}, {Alternatives: []string{"("}, Optional: false}, {List: []commandTokenElement{{Children: []commandTokenElement{{Rule: "NameDeclaration", Expected: "<name>", Name: "PropertyName", Hint: CompletionHintNone, HasHint: true, Optional: false}, {Alternatives: []string{"="}, Optional: false}, {Rule: "Value", Expected: "<value>", Name: "PropertyValue", Hint: CompletionHintLiteral, HasHint: true, Optional: false}}, Optional: false}}, ListSeparator: ",", Optional: false}, {Alternatives: []string{")"}, Optional: false}}, Hidden: true, Optional: false},
 		}),
 		tokenCommandParserInfo("AlterExtentContainersAdd", []commandTokenElement{
 			{Alternatives: []string{"alter"}, Optional: false},

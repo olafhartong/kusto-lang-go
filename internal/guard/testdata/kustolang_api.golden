@@ -4474,6 +4474,7 @@ type EngineCommandCatalog struct {
 	DropEntityGroup						*CommandSymbol
 	ShowEntityGroup						*CommandSymbol
 	ShowEntityGroups					*CommandSymbol
+	AlterDatabaseExtentContainerPath			*CommandSymbol
 	AlterExtentContainersAdd				*CommandSymbol
 	AlterExtentContainersDrop				*CommandSymbol
 	AlterExtentContainersRecycle				*CommandSymbol

@@ -20,7 +20,7 @@ func TestCommandGrammarParsesUnknownCommandBlock(t *testing.T) {
 }
 
 func TestCommandGrammarParsesGeneratedEngineSimpleCommands(t *testing.T) {
-	if got := len(engineCommandParserInfos()); got != 645 {
+	if got := len(engineCommandParserInfos()); got != 646 {
 		t.Fatalf("engine simple command parser count = %d", got)
 	}
 
@@ -1195,15 +1195,15 @@ func TestCommandGrammarGeneratedEngineOptionalTokenCommand(t *testing.T) {
 	}
 }
 
-func TestCommandGrammarShowCapacityUpdatePolicyOverExternalTable(t *testing.T) {
-	block := ParseCommandBlock(".show capacity update-policy-over-external-table")
+func TestCommandGrammarShowCapacityAsyncUpdatePolicy(t *testing.T) {
+	block := ParseCommandBlock(".show capacity async-update-policy")
 	command, ok := firstCommandExpression(t, block).(*CustomCommand)
 	if !ok || command.CommandKind() != "ShowCapacity" {
 		t.Fatalf("show capacity command = %#v", firstCommandExpression(t, block))
 	}
 	custom := command.Custom().(*CustomNode)
 	resource, ok := custom.GetChild(2).(*SyntaxToken)
-	if !ok || resource.RawText() != "update-policy-over-external-table" {
+	if !ok || resource.RawText() != "async-update-policy" {
 		t.Fatalf("show capacity resource = %#v", custom.GetChild(2))
 	}
 	if command.ReferencedSymbol() != EngineCommands.ShowCapacity {

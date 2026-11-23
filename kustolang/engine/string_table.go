@@ -30,9 +30,6 @@ func (t *StringTable) AddAll(strings []string) {
 }
 
 func (t *StringTable) AddRange(text string, start int, length int) string {
-	if result, ok := t.values.TryGetValue(text, start, length); ok {
-		return result
-	}
 	return t.values.GetOrAddValueRangeFunc(text, start, length, func(text string, start int, length int) string {
 		return text[start : start+length]
 	})

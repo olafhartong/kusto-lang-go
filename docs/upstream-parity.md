@@ -8,19 +8,24 @@ runtime is used by the library or binary.
 ## Current upstream update
 
 The current pin is Microsoft Kusto.Language 13.0.0 at
-`dbd7ca7684adfd7a38536f74728670dc54a67acc` (2026-11-08); Microsoft's
-version number remains 13.0.0. The November 2–8 synchronization adds datetime
-literal interpretation warnings, eight graph-model policy commands, keyword
-function-call grammar support, command-recovery pruning, and cancellation
-propagation and deferred-expansion fixes. Earlier cache-factory and shared-grammar
-changes remain covered by their historical regressions.
+`3a7d2d690172a4ac73d6b2e2ae5b2f6a37cbe64f` (2026-11-12); Microsoft's
+version number remains 13.0.0. The November 9–12 synchronization renames the
+capacity resource to `async-update-policy`, adds the hidden extent-container
+path command (646 engine commands), removes a redundant string-range lookup,
+and updates generator guidance. Command completion also follows upstream's
+optional-fragment traversal, avoiding repeated resource suggestions.
+Earlier datetime, cancellation, cache, and grammar changes remain covered by
+their historical regressions.
 The [upstream changelog](../UPSTREAM_CHANGELOG.md) records affected areas,
 functions, observed behavior, and earlier source updates. The
 [development source oracle](../tools/upstream-oracle/README.md) rebuilds the
 unmodified pinned C# source and independently replays both attested corpora.
 All 489 existing cases still match exactly after replay against the current
-source revision. The current cache and 13.0.0 compatibility fixtures are bound
-to that revision; the historical 2026-10-22 fixture remains checked in and is
+source revision. The [current command fixture](../kustolang/engine/testdata/upstream_3a7d2d6_commands.json)
+adds 22 valid/malformed command cases, metadata and schema checks, affected
+completion vocabulary, and six string ranges. Full source completion lists
+are recorded; native assertions focus on vocabulary affected by this update.
+The current cache and 13.0.0 compatibility fixtures are bound to that revision; the historical 2026-10-22 fixture remains checked in and is
 also replayed. The additional 13.0.0 fixture
 covers ordinal Unicode comparison, wildcard middle segments, UTF-16 and byte
 scanners, bounded text sources, literal values, completion ordering, and
@@ -91,7 +96,7 @@ The practical analyzer milestone covers the supported KQL workflows:
 - all 429 public built-in `Functions` symbols from the pinned handwritten and
   generated conversion catalogs, emitted by deterministic standard-library Go
   AST generation and shared directly with the binder;
-- all 645 generated engine command symbols and the pinned non-engine server
+- all 646 generated engine command symbols and the pinned non-engine server
   command catalogs, preserving result schemas, constructions, ordering, and
   the exact symbols used by command parsing;
 - table change-data-capture and cluster materialized-view prioritization policy

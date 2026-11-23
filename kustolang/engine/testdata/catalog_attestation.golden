@@ -600,7 +600,7 @@ NotBetween
 HasAny
 HasAll
 
-[engine-commands] count=645
+[engine-commands] count=646
 ShowDatabase
 ShowDatabaseDetails
 ShowDatabaseIdentity
@@ -1140,6 +1140,7 @@ AlterMergeEntityGroup
 DropEntityGroup
 ShowEntityGroup
 ShowEntityGroups
+AlterDatabaseExtentContainerPath
 AlterExtentContainersAdd
 AlterExtentContainersDrop
 AlterExtentContainersRecycle

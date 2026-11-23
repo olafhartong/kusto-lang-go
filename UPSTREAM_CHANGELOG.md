@@ -15,6 +15,55 @@ These requirements also apply to future coding agents through
 [`AGENTS.md`](AGENTS.md). Local and CI provenance checks require a populated
 table in the entry linking to the currently pinned revision.
 
+## 2026-11-12 — string-range interning
+
+Source: [`3a7d2d6`](https://github.com/microsoft/Kusto-Query-Language/commit/3a7d2d690172a4ac73d6b2e2ae5b2f6a37cbe64f).
+Microsoft's source version remains **13.0.0**. This source synchronization
+includes the November 9–11 changes below; it is not a package release.
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| String interning | `StringTable.Add(string, int, int)`, `GetOrAddValue`; Go internal `StringTable.AddRange` and public `StringTable.Add` range overload | Removes the redundant preliminary lookup before get-or-add. Adding `__Alpha__` at offset 2, length 5 still returns `Alpha` and reuses the existing interned value. Empty ranges and a range after a supplementary Unicode character retain their values. The public Go UTF-16 facade already performs one get-or-add; only the internal byte-offset range path needed changing. No timing or allocation improvement is claimed. |
+
+The [current source-oracle fixture](kustolang/engine/testdata/upstream_3a7d2d6_commands.json)
+and [native regressions](kustolang/engine/upstream_nov12_test.go) cover six
+string ranges, 22 valid/malformed commands, command metadata, result schemas,
+and the changed completion vocabulary. Complete source completion lists are
+retained as evidence; native assertions cover the affected resources and hidden
+command, not unrelated completion differences. Source results agree under
+five cultures. Both existing corpora (489 cases) and the historical datetime,
+cache, and 13.0.0 compatibility matrices were replayed against this exact pin.
+
+## 2026-11-11 — hidden extent-container path command
+
+Source: [`94c927c`](https://github.com/microsoft/Kusto-Query-Language/commit/94c927cee852934fc5bcb8d4573bde440ec99057).
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Engine commands | `AlterDatabaseExtentContainerPath`, `DatabaseExtentContainerAlterPathCommand`; Go `EngineCommands`, public `EngineCommandCatalog`, and command grammar | Adds `.alter database db extentcontainer with (path='new')`, which now parses as this command and returns ten columns from `ExtentContainerId:guid` through `MetadataContainer:bool`. Unknown `db` produces the normal `KS142` database-reference diagnostic. Missing properties, values, parentheses, extra commas, and trailing input match source recovery. The hidden command is registered but is not suggested as `extentcontainer` in completion. The engine catalog grows from 645 to 646 entries. |
+
+Evidence: the [current command fixture](kustolang/engine/testdata/upstream_3a7d2d6_commands.json)
+and [regressions](kustolang/engine/upstream_nov12_test.go).
+
+## 2026-11-09 — generator regeneration guidance
+
+Source: [`a0120cd`](https://github.com/microsoft/Kusto-Query-Language/commit/a0120cd38b6e578a27a9926381972adb47fcfa9c).
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Development tooling | `CommandGenerator.WriteHeader` | **Source update:** generated comments now recommend rebuilding the project, or setting `TextTemplatingFileGenerator` and running the custom tool. This changes guidance only and requires no Go runtime modification. The development oracle regenerates all command grammars and catalogs with the updated source generator. |
+
+## 2026-11-09 — capacity resource rename
+
+Source: [`790a00a`](https://github.com/microsoft/Kusto-Query-Language/commit/790a00ab870424e761dd9bfa6b890d6fee713699).
+
+| Area | Impacted functions or symbols | Confirmed behavior or update |
+| --- | --- | --- |
+| Capacity command grammar and completion | `ShowCapacity`; Go command grammar and `KustoCodeService.GetCompletionItems` | Replaces `update-policy-over-external-table` with `async-update-policy`. `.show capacity async-update-policy` now has the four-column capacity result schema, including scoped variants. The old resource falls back to an unrecognized command with no result schema; upstream does not emit a diagnostic for that example. Completion offers the new name and omits the old one. Go's completion fragment wrapper now uses optional-parser semantics, matching upstream, so an already consumed resource is not offered again. |
+
+Evidence: the [current command fixture](kustolang/engine/testdata/upstream_3a7d2d6_commands.json)
+and [regressions](kustolang/engine/upstream_nov12_test.go).
+
 ## 2026-11-08 — graph-model policy commands
 
 Source: [`dbd7ca7`](https://github.com/microsoft/Kusto-Query-Language/commit/dbd7ca7684adfd7a38536f74728670dc54a67acc).

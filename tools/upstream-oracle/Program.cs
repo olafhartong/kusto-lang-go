@@ -9,6 +9,11 @@ if (args.Length > 2)
 {
     System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo(args[2]);
 }
+if (args[0] == "--november12")
+{
+    File.WriteAllText(args[1], JsonSerializer.Serialize(November12.Build(args[3]), new JsonSerializerOptions { WriteIndented = true }));
+    return;
+}
 if (args[0] == "--november")
 {
     File.WriteAllText(args[1], JsonSerializer.Serialize(November.Build(args[3]), new JsonSerializerOptions { WriteIndented = true }));

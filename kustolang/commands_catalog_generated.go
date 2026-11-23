@@ -548,6 +548,7 @@ type EngineCommandCatalog struct {
 	DropEntityGroup                                       *CommandSymbol
 	ShowEntityGroup                                       *CommandSymbol
 	ShowEntityGroups                                      *CommandSymbol
+	AlterDatabaseExtentContainerPath                      *CommandSymbol
 	AlterExtentContainersAdd                              *CommandSymbol
 	AlterExtentContainersDrop                             *CommandSymbol
 	AlterExtentContainersRecycle                          *CommandSymbol
@@ -1201,6 +1202,7 @@ func newEngineCommandCatalog() *EngineCommandCatalog {
 		DropEntityGroup:                                       source.DropEntityGroup,
 		ShowEntityGroup:                                       source.ShowEntityGroup,
 		ShowEntityGroups:                                      source.ShowEntityGroups,
+		AlterDatabaseExtentContainerPath:                      source.AlterDatabaseExtentContainerPath,
 		AlterExtentContainersAdd:                              source.AlterExtentContainersAdd,
 		AlterExtentContainersDrop:                             source.AlterExtentContainersDrop,
 		AlterExtentContainersRecycle:                          source.AlterExtentContainersRecycle,

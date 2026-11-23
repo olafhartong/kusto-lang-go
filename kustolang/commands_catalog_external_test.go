@@ -8,8 +8,8 @@ import (
 
 func TestPublicEngineCommandCatalogMatchesPinnedUpstream(t *testing.T) {
 	all := kustolang.EngineCommands.All()
-	if len(all) != 645 {
-		t.Fatalf("engine command count = %d, want 645", len(all))
+	if len(all) != 646 {
+		t.Fatalf("engine command count = %d, want 646", len(all))
 	}
 	if all[0] != kustolang.EngineCommands.ShowDatabase ||
 		all[len(all)-1] != kustolang.EngineCommands.ReplaceDatabaseKeyVaultSecrets {
@@ -74,6 +74,19 @@ func TestPublicDatabaseRowIDPolicyCommands(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestPublicDatabaseExtentContainerPathCommand(t *testing.T) {
+	command := kustolang.EngineCommands.AlterDatabaseExtentContainerPath
+	if command == nil || command.Construction() != "DatabaseExtentContainerAlterPathCommand(DatabaseName, (PropertyName, PropertyValue)*)" {
+		t.Fatalf("extent-container path command = %#v", command)
+	}
+	if kustolang.DefaultGlobalState.GetCommand(command.SymbolName()) != command {
+		t.Fatal("extent-container path command is not registered")
+	}
+	if table := command.ResultType(); table == nil || len(table.Columns()) != 10 || table.Columns()[0].SymbolName() != "ExtentContainerId" || table.Columns()[9].SymbolName() != "MetadataContainer" {
+		t.Fatalf("extent-container result type = %#v", table)
 	}
 }
 

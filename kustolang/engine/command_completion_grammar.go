@@ -85,7 +85,7 @@ func (g *CommandGrammar) commandDescriptorElementListParser(elements []commandTo
 			groupParser := g.commandDescriptorRequiredElementListParser(elements[i:groupEnd], completion)
 			if groupParser != nil {
 				if commandCompletionElementsCanSkip(elements[i:groupEnd]) {
-					groupParser = ZeroOrOne(groupParser)
+					groupParser = commandDescriptorOptionalParser(groupParser, completion)
 				}
 				parsers = append(parsers, groupParser)
 			}
@@ -96,7 +96,7 @@ func (g *CommandGrammar) commandDescriptorElementListParser(elements []commandTo
 		parser := g.commandDescriptorElementParser(element, completion)
 		if parser != nil {
 			if commandElementCanSkip(element) {
-				parser = ZeroOrOne(parser)
+				parser = commandDescriptorOptionalParser(parser, completion)
 			}
 			parsers = append(parsers, parser)
 		}
@@ -106,6 +106,16 @@ func (g *CommandGrammar) commandDescriptorElementListParser(elements []commandTo
 		return nil
 	}
 	return Sequence(parsers...)
+}
+
+func commandDescriptorOptionalParser(parser Parser[LexicalToken], completion bool) Parser[LexicalToken] {
+	if !completion {
+		return ZeroOrOne(parser)
+	}
+	// Upstream command fragments use Optional, whose annotation traversal visits
+	// the fragment once. ZeroOrOne also probes for a second occurrence, offering
+	// an already consumed resource again at the caret.
+	return OptionalValue(Produce(parser, func([]any) any { return nil }))
 }
 
 func (g *CommandGrammar) commandDescriptorRequiredElementListParser(elements []commandTokenElement, completion bool) Parser[LexicalToken] {
